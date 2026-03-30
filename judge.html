@@ -313,12 +313,11 @@
   <div class="toast" id="tst"><span id="ti"></span><span id="tm"></span></div>
 </div>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-const firebaseConfig = {
+<!-- Firebase compat SDK (работает без модулей) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
   apiKey: "AIzaSyA1xkiAfHRKVCQDCmatrWLolEphtgwXOd0",
   authDomain: "kulakovalaw.firebaseapp.com",
   databaseURL: "https://kulakovalaw-default-rtdb.europe-west1.firebasedatabase.app",
@@ -326,15 +325,8 @@ const firebaseConfig = {
   storageBucket: "kulakovalaw.firebasestorage.app",
   messagingSenderId: "569728367844",
   appId: "1:569728367844:web:6c888f00d010b5fde2c0f1"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-window._fbDb = db;
-window._fbRef = ref;
-window._fbSet = set;
-window._fbGet = get;
-window._fbOnValue = onValue;
+});
+const db = firebase.database();
 </script>
 
 <script>
@@ -409,24 +401,17 @@ const C = {
 let ji=null, ni=0, pin='', sc={}, sub={};
 
 function ld(){
-  // Загружаем из Firebase при старте
-  if(window._fbDb){
-    window._fbOnValue(window._fbRef(window._fbDb,'scores'),(snap)=>{
-      sc = snap.val()||{};
-    });
-    window._fbOnValue(window._fbRef(window._fbDb,'submitted'),(snap)=>{
-      sub = snap.val()||{};
-      // обновить UI если судья уже залогинен
-      if(ji!==null){ rTabs(); rNom(); }
-    });
-  }
+  // Слушаем scores и submitted из Firebase
+  db.ref('scores').on('value', snap=>{ sc = snap.val()||{}; });
+  db.ref('submitted').on('value', snap=>{
+    sub = snap.val()||{};
+    if(ji!==null){ rTabs(); rNom(); }
+  });
 }
 
 function sv(){
-  if(window._fbDb){
-    window._fbSet(window._fbRef(window._fbDb,'scores'), sc);
-    window._fbSet(window._fbRef(window._fbDb,'submitted'), sub);
-  }
+  db.ref('scores').set(sc);
+  db.ref('submitted').set(sub);
 }
 function gs(j,nid,t){return sc?.[j]?.[nid]?.[t]||{technique:5,musicality:5,choreo:5,appearance:5,comment:'',saved:false};}
 function ss(j,nid,t,f,v){if(!sc[j])sc[j]={};if(!sc[j][nid])sc[j][nid]={};if(!sc[j][nid][t])sc[j][nid][t]={technique:5,musicality:5,choreo:5,appearance:5,comment:'',saved:false};sc[j][nid][t][f]=v;sc[j][nid][t].saved=false;sv();}
@@ -559,15 +544,16 @@ function rNom(){
 
 function rSub(nom){
   const saved=Object.values(sc?.[ji]?.[nom.id]||{}).filter(s=>s.saved).length;
-  const tot=nom.teams.length,pct=Math.round(saved/tot*100);
+  const tot=nom.teams.length, pct=Math.round(saved/tot*100);
   const nomI=C.noms.indexOf(nom);
+  const isSubmitted=sub?.[ji]?.[nom.id]===true;
   document.getElementById('submit').innerHTML=`
     <div class="subbox">
       <span class="subt">Отправить оценки</span>
-      <span class="subs">Оценено ${saved} из ${tot}</span>
+      <span class="subs">Оценено ${saved} из ${tot} ${isSubmitted?'· <span style="color:var(--ok)">✓ отправлено</span>':''}</span>
       <div class="prog"><div class="progf" style="width:${pct}%"></div></div>
-      <div class="subbtn${saved<tot?' dis':''}" onclick="${saved<tot?'':'subNom('+nomI+')'}">
-        ${saved<tot?'Осталось '+(tot-saved):'✓ Отправить финальные оценки'}
+      <div class="subbtn" onclick="subNom(${nomI})">
+        ${isSubmitted?'🔄 Переотправить оценки':'✓ Отправить оценки'}
       </div>
     </div>`;
 }
@@ -586,7 +572,6 @@ function oi(t,k,raw){
   ss(ji,C.noms[ni].id,t,k,cl);
   const inp=document.getElementById('ni_'+t+'_'+k);
   if(inp)inp.className='ninp '+cc(cl);
-  const s=gs(ji,C.noms[ni].id,t);
   document.getElementById('tv'+t).textContent=wt(gs(ji,C.noms[ni].id,t),ni).toFixed(3);
   document.getElementById('sb'+t).className='savbtn';
   document.getElementById('sb'+t).textContent='💾 Сохранить';
@@ -617,10 +602,9 @@ function savT(t){
 }
 function subNom(nomI){
   const nom=C.noms[nomI];
-  const saved=Object.values(sc?.[ji]?.[nom.id]||{}).filter(s=>s.saved).length;
-  if(saved<nom.teams.length)return;
   if(!sub[ji])sub[ji]={};
-  sub[ji][nom.id]=true;sv();rTabs();rNom();toast('🏆','Оценки отправлены!');
+  sub[ji][nom.id]=true;
+  sv();rTabs();rNom();toast('🏆','Оценки отправлены!');
 }
 function toast(ico,msg){
   const t=document.getElementById('tst');
