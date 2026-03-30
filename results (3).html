@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAW — Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+#R,#R*{box-sizing:border-box!important;font-family:'Manrope',sans-serif!important;}
+#R{
+  --a:#e03535;--a2:#ff6b35;--s:#13131c;--s2:#1c1c2a;--bd:#2a2a3d;
+  --mt:#6b6b8a;--ok:#4ade80;--gold:#FFD700;--silv:#C0C0C0;--brnz:#CD7F32;
+  position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;
+  background:#0a0a0f!important;color:#f0f0f5!important;z-index:9999!important;
+  overflow:hidden!important;display:flex!important;flex-direction:column!important;
+}
+#R button,#R input,#R textarea{all:unset!important;box-sizing:border-box!important;font-family:'Manrope',sans-serif!important;}
+
+#R .bg{position:fixed!important;inset:0!important;pointer-events:none!important;z-index:0!important;
+  background:radial-gradient(ellipse 50% 40% at 85% 15%,rgba(224,53,53,.07) 0%,transparent 60%),
+             radial-gradient(ellipse 40% 50% at 10% 85%,rgba(255,107,53,.05) 0%,transparent 60%)!important;}
+
+/* HEADER */
+#R .hdr{display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:0 20px!important;height:58px!important;flex-shrink:0!important;z-index:2!important;
+  background:rgba(10,10,15,.96)!important;border-bottom:1px solid var(--bd)!important;}
+#R .hright{display:flex!important;align-items:center!important;gap:10px!important;}
+#R .live{display:flex!important;align-items:center!important;gap:7px!important;
+  background:rgba(248,113,113,.12)!important;border:1px solid rgba(248,113,113,.3)!important;
+  color:#f87171!important;padding:4px 12px!important;border-radius:20px!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1px!important;}
+#R .ldot{width:7px!important;height:7px!important;border-radius:50%!important;background:#f87171!important;
+  animation:lp 1.5s ease-in-out infinite!important;}
+@keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+#R .fsbtn{background:var(--s2)!important;border:1px solid var(--bd)!important;color:var(--mt)!important;
+  padding:6px 14px!important;border-radius:8px!important;cursor:pointer!important;
+  font-size:12px!important;transition:all .2s!important;}
+#R .fsbtn:hover{border-color:var(--a)!important;color:var(--a)!important;}
+#R .upd{font-size:11px!important;color:var(--mt)!important;}
+
+/* TABS */
+#R .tabs{display:flex!important;padding:0 16px!important;border-bottom:1px solid var(--bd)!important;
+  flex-shrink:0!important;background:#0a0a0f!important;overflow-x:auto!important;
+  scrollbar-width:none!important;z-index:2!important;}
+#R .tabs::-webkit-scrollbar{display:none!important;}
+#R .tab{background:none!important;border:none!important;border-bottom:2px solid transparent!important;
+  color:var(--mt)!important;padding:13px 16px!important;font-size:13px!important;font-weight:600!important;
+  white-space:nowrap!important;cursor:pointer!important;margin-bottom:-1px!important;
+  transition:color .2s!important;}
+#R .tab:hover{color:#f0f0f5!important;}
+#R .tab.act{color:var(--a)!important;border-bottom-color:var(--a)!important;}
+
+/* SCROLL */
+#R .main{flex:1!important;overflow-y:auto!important;padding:28px 20px!important;z-index:1!important;
+  scrollbar-width:thin!important;scrollbar-color:var(--bd) transparent!important;}
+#R .main::-webkit-scrollbar{width:4px!important;}
+#R .main::-webkit-scrollbar-thumb{background:var(--bd)!important;border-radius:2px!important;}
+
+/* STATUS */
+#R .srow{display:flex!important;align-items:center!important;justify-content:space-between!important;
+  margin-bottom:28px!important;flex-wrap:wrap!important;gap:10px!important;}
+#R .ntitle{font-family:'Bebas Neue',sans-serif!important;font-size:36px!important;letter-spacing:3px!important;}
+#R .jpills{display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
+#R .pill{display:flex!important;align-items:center!important;gap:6px!important;padding:5px 12px!important;
+  border-radius:20px!important;font-size:11px!important;font-weight:600!important;border:1px solid!important;}
+#R .pill.dn{background:rgba(74,222,128,.08)!important;border-color:rgba(74,222,128,.3)!important;color:var(--ok)!important;}
+#R .pill.wt{background:rgba(107,107,138,.1)!important;border-color:var(--bd)!important;color:var(--mt)!important;}
+#R .pdot{width:6px!important;height:6px!important;border-radius:50%!important;background:currentColor!important;}
+
+/* CRITERIA BADGE */
+#R .crit-info{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin-bottom:24px!important;}
+#R .cb{background:var(--s2)!important;border:1px solid var(--bd)!important;border-radius:8px!important;
+  padding:5px 12px!important;font-size:11px!important;color:var(--mt)!important;}
+#R .cb span{color:var(--a)!important;font-weight:700!important;}
+
+/* PODIUM */
+#R .podium{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:10px!important;margin-bottom:32px!important;align-items:end!important;}
+#R .pc{border-radius:14px!important;padding:20px 12px!important;text-align:center!important;
+  border:1px solid!important;position:relative!important;overflow:hidden!important;
+  transition:transform .25s!important;animation:ri .5s ease both!important;}
+#R .pc:hover{transform:translateY(-4px)!important;}
+@keyframes ri{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+#R .pc.g{background:linear-gradient(145deg,rgba(255,215,0,.14),rgba(255,215,0,.04))!important;border-color:rgba(255,215,0,.4)!important;animation-delay:.05s!important;}
+#R .pc.s{background:linear-gradient(145deg,rgba(192,192,192,.1),rgba(192,192,192,.03))!important;border-color:rgba(192,192,192,.3)!important;animation-delay:.15s!important;}
+#R .pc.b{background:linear-gradient(145deg,rgba(205,127,50,.1),rgba(205,127,50,.03))!important;border-color:rgba(205,127,50,.3)!important;animation-delay:.25s!important;}
+#R .pmed{font-size:32px!important;display:block!important;margin-bottom:6px!important;}
+#R .pplace{font-family:'Bebas Neue',sans-serif!important;font-size:11px!important;letter-spacing:3px!important;color:var(--mt)!important;display:block!important;margin-bottom:5px!important;}
+#R .pname{font-size:13px!important;font-weight:800!important;margin-bottom:8px!important;line-height:1.2!important;}
+#R .pc.g .pname{color:var(--gold)!important;}
+#R .pc.s .pname{color:var(--silv)!important;}
+#R .pc.b .pname{color:var(--brnz)!important;}
+#R .pscore{font-family:'Bebas Neue',sans-serif!important;font-size:34px!important;line-height:1!important;}
+#R .pc.g .pscore{color:var(--gold)!important;}
+#R .pc.s .pscore{color:var(--silv)!important;}
+#R .pc.b .pscore{color:var(--brnz)!important;}
+#R .plbl{font-size:10px!important;color:var(--mt)!important;text-transform:uppercase!important;letter-spacing:1px!important;margin-top:2px!important;display:block!important;}
+#R .pbar{position:absolute!important;bottom:0!important;left:0!important;right:0!important;height:3px!important;}
+#R .pc.g .pbar{background:var(--gold)!important;}
+#R .pc.s .pbar{background:var(--silv)!important;}
+#R .pc.b .pbar{background:var(--brnz)!important;}
+
+/* TABLE */
+#R .sec{font-family:'Bebas Neue',sans-serif!important;font-size:17px!important;letter-spacing:2px!important;
+  color:var(--mt)!important;display:flex!important;align-items:center!important;gap:10px!important;margin-bottom:10px!important;}
+#R .sec::after{content:''!important;flex:1!important;height:1px!important;background:var(--bd)!important;}
+#R .tbl{background:var(--s)!important;border:1px solid var(--bd)!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:28px!important;}
+#R .thead{display:grid!important;padding:10px 16px!important;background:var(--s2)!important;border-bottom:1px solid var(--bd)!important;}
+#R .th{font-size:10px!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:var(--mt)!important;font-weight:600!important;}
+#R .th.r{text-align:right!important;}
+#R .trow{display:grid!important;padding:13px 16px!important;border-bottom:1px solid var(--bd)!important;align-items:center!important;transition:background .15s!important;}
+#R .trow:last-child{border-bottom:none!important;}
+#R .trow:hover{background:rgba(255,255,255,.02)!important;}
+#R .trow.t3{background:rgba(224,53,53,.04)!important;}
+#R .rnk{font-family:'Bebas Neue',sans-serif!important;font-size:22px!important;color:var(--bd)!important;}
+#R .rnk.r1{color:var(--gold)!important;}
+#R .rnk.r2{color:var(--silv)!important;}
+#R .rnk.r3{color:var(--brnz)!important;}
+#R .tn{font-size:14px!important;font-weight:700!important;}
+#R .tc{font-size:11px!important;color:var(--mt)!important;margin-top:2px!important;font-style:italic!important;}
+#R .sc{text-align:right!important;font-size:13px!important;font-weight:600!important;}
+#R .stot{text-align:right!important;font-family:'Bebas Neue',sans-serif!important;font-size:22px!important;color:var(--a)!important;}
+#R .stot.r1{color:var(--gold)!important;}
+#R .stot.r2{color:var(--silv)!important;}
+#R .stot.r3{color:var(--brnz)!important;}
+
+/* COMMENTS */
+#R .ccard{background:var(--s)!important;border:1px solid var(--bd)!important;border-radius:12px!important;padding:16px 18px!important;margin-bottom:10px!important;}
+#R .cteam{font-size:13px!important;font-weight:700!important;margin-bottom:10px!important;display:flex!important;align-items:center!important;gap:8px!important;}
+#R .cbadge{background:var(--s2)!important;border:1px solid var(--bd)!important;padding:2px 10px!important;border-radius:10px!important;font-size:11px!important;color:var(--mt)!important;}
+#R .jcmt{display:flex!important;gap:10px!important;margin-bottom:8px!important;align-items:flex-start!important;}
+#R .jcmt:last-child{margin-bottom:0!important;}
+#R .jauth{font-size:11px!important;color:var(--a)!important;font-weight:600!important;white-space:nowrap!important;min-width:110px!important;padding-top:2px!important;}
+#R .jtxt{font-size:13px!important;line-height:1.5!important;font-style:italic!important;}
+
+/* ADMIN */
+#R .atog{position:fixed!important;bottom:18px!important;right:18px!important;z-index:50!important;
+  width:42px!important;height:42px!important;background:var(--s2)!important;border:1px solid var(--bd)!important;
+  border-radius:50%!important;color:var(--mt)!important;font-size:17px!important;cursor:pointer!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;transition:all .2s!important;}
+#R .atog:hover{border-color:var(--a)!important;color:var(--a)!important;}
+#R .adm{position:fixed!important;bottom:70px!important;right:18px!important;z-index:50!important;
+  background:var(--s)!important;border:1px solid var(--bd)!important;border-radius:14px!important;
+  padding:16px!important;width:250px!important;display:none!important;box-shadow:0 20px 60px rgba(0,0,0,.5)!important;}
+#R .adm.vis{display:block!important;}
+#R .atitle{font-size:10px!important;text-transform:uppercase!important;letter-spacing:2px!important;color:var(--mt)!important;margin-bottom:10px!important;display:block!important;}
+#R .arow{display:flex!important;align-items:center!important;justify-content:space-between!important;font-size:12px!important;margin-bottom:7px!important;}
+#R .adot{width:7px!important;height:7px!important;border-radius:50%!important;margin-right:7px!important;flex-shrink:0!important;}
+#R .arow.dn .adot{background:var(--ok)!important;}
+#R .arow.wt .adot{background:var(--bd)!important;}
+#R .an{display:flex!important;align-items:center!important;flex:1!important;}
+#R .ast{font-size:11px!important;color:var(--mt)!important;}
+#R .arow.dn .ast{color:var(--ok)!important;}
+#R .pbtn{display:block!important;width:100%!important;background:var(--a)!important;color:#fff!important;
+  border-radius:10px!important;padding:10px!important;font-size:13px!important;font-weight:700!important;
+  cursor:pointer!important;text-align:center!important;margin-top:12px!important;transition:all .2s!important;}
+#R .pbtn:hover{background:#c02020!important;}
+#R .pbtn.done{background:var(--ok)!important;color:#0a0a0f!important;cursor:default!important;}
+
+/* WINNER */
+#R .wov{position:fixed!important;inset:0!important;z-index:200!important;
+  background:rgba(10,10,15,.97)!important;display:none!important;
+  align-items:center!important;justify-content:center!important;flex-direction:column!important;text-align:center!important;}
+#R .wov.vis{display:flex!important;}
+#R .wico{font-size:80px!important;margin-bottom:14px!important;animation:pop .5s ease!important;}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+#R .wpl{font-family:'Bebas Neue',sans-serif!important;font-size:16px!important;letter-spacing:6px!important;color:var(--mt)!important;margin-bottom:10px!important;}
+#R .wnm{font-family:'Bebas Neue',sans-serif!important;font-size:64px!important;letter-spacing:3px!important;
+  background:linear-gradient(135deg,var(--gold),var(--a2))!important;
+  -webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;
+  line-height:1!important;margin-bottom:10px!important;}
+#R .wsc{font-family:'Bebas Neue',sans-serif!important;font-size:40px!important;color:var(--gold)!important;margin-bottom:24px!important;}
+#R .wcl{background:var(--s2)!important;border:1px solid var(--bd)!important;color:var(--mt)!important;
+  padding:9px 26px!important;border-radius:10px!important;cursor:pointer!important;font-size:13px!important;}
+
+/* PENDING */
+#R .pend{text-align:center!important;padding:70px 20px!important;}
+#R .pend-ico{font-size:52px!important;display:block!important;margin-bottom:16px!important;}
+#R .pend-t{font-family:'Bebas Neue',sans-serif!important;font-size:26px!important;letter-spacing:3px!important;color:var(--mt)!important;margin-bottom:8px!important;display:block!important;}
+#R .pend-s{font-size:13px!important;color:var(--mt)!important;}
+
+@media(max-width:600px){
+  #R .podium{grid-template-columns:1fr!important;}
+  #R .main{padding:16px!important;}
+}
+</style>
+</head>
+<body>
+<div id="R">
+  <div class="bg"></div>
+
+  <div class="hdr">
+    <img src="https://i.ibb.co/0p0Dk0k8/Chat-GPT-Image-30-2026-23-47-28.png"
+         style="height:36px!important;object-fit:contain!important;display:block!important;">
+    <div class="hright">
+      <div class="live"><div class="ldot"></div>LIVE</div>
+      <span class="upd" id="upd">—</span>
+      <div class="fsbtn" onclick="toggleFS()">⛶ Fullscreen</div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="main" id="main">
+    <div class="srow">
+      <span class="ntitle" id="ntitle">—</span>
+      <div class="jpills" id="jpills"></div>
+    </div>
+    <div class="crit-info" id="critInfo"></div>
+    <div id="content"></div>
+  </div>
+
+  <div class="atog" onclick="toggleAdm()">⚙</div>
+  <div class="adm" id="adm">
+    <span class="atitle">Статус судей</span>
+    <div id="admrows"></div>
+    <div class="pbtn" id="pbtn" onclick="publish()">Опубликовать результаты</div>
+  </div>
+
+  <div class="wov" id="wov">
+    <div class="wico">🏆</div>
+    <div class="wpl">ПОБЕДИТЕЛЬ</div>
+    <div class="wnm" id="wnm">—</div>
+    <div class="wsc" id="wsc">—</div>
+    <div class="wcl" onclick="closeW()">Закрыть</div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA1xkiAfHRKVCQDCmatrWLolEphtgwXOd0",
+  authDomain: "kulakovalaw.firebaseapp.com",
+  databaseURL: "https://kulakovalaw-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "kulakovalaw",
+  storageBucket: "kulakovalaw.firebasestorage.app",
+  messagingSenderId: "569728367844",
+  appId: "1:569728367844:web:6c888f00d010b5fde2c0f1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Слушаем изменения в реальном времени — страница обновляется автоматически
+onValue(ref(db,'scores'),    (snap)=>{ window._fbScores = snap.val()||null; renderAll(); });
+onValue(ref(db,'submitted'), (snap)=>{ window._fbSub    = snap.val()||null; renderAll(); });
+onValue(ref(db,'published'), (snap)=>{ window._fbPub    = snap.val()||null; renderAll(); });
+
+window._fbDb  = db;
+window._fbRef = ref;
+window._fbSet = set;
+</script>
+
+<script>
+// ══ CONFIG ══
+const C = {
+  judges:[
+    {name:'Деки',          block:1},
+    {name:'Полли Оричи',   block:1},
+    {name:'Олег Клевакин', block:1},
+    {name:'Coco',          block:1},
+  ],
+  critSolo:[
+    {k:'technique',  l:'Техника',       w:.35},
+    {k:'musicality', l:'Музыкальность', w:.25},
+    {k:'choreo',     l:'Хореография',   w:.35},
+    {k:'appearance', l:'Внешний вид',   w:.05},
+  ],
+  critCrew:[
+    {k:'technique',  l:'Техника',              w:.20},
+    {k:'musicality', l:'Муз. и синхрон',       w:.25},
+    {k:'choreo',     l:'Хореог. и рисунки',    w:.35},
+    {k:'appearance', l:'Внешний вид',          w:.20},
+  ],
+  noms:[
+    {id:'solo_beg', name:'Solo Beginners', short:'Solo Beg', type:'solo', block:1, teams:[
+      'Портнова Анна','Меньших Дарья','Кораблина Стефания','Гончарова Дарья','Гаспарян Анжела',
+      'Давыдова Эвелина','Бутко Мария','Улыбина Татьяна','Бернадская Анна','Терещенко София',
+      'Еремеева Маргарита','Кузóра Карина','Наимова Виктория','Шахова София','Грабежева Жанна',
+      'Бойкова Юлия','Колесникова Ева','Павлова Маргарита','Ажнина Светлана','Лаптева Варвара',
+      'Окутина Мария','Гайфутдинова Валерия','Зотова Валерия','Григорьева Алиса','Мельникова Кристина',
+      'Бондарева Дарья','Мартынова Кристина','Лавриненко Екатерина','Афанасьева Екатерина','Нафикова Алина',
+      'Дмитриева Ирина','Маркитан Анастасия','Ким Александра','Казеннова Юлия','Бондарь Анна',
+      'Кугаевская Елизавета','Никулина Анна','Бильсон Анастасия','Пинчук Валерия','Дёмена Анастасия',
+      'Картошкина Мария','Борисова София','Шведова Ангелина','Шилкина Ксения','Борисова Дана','Евсеева Анастасия',
+    ]},
+    {id:'duet', name:'Duet', short:'Duet', type:'solo', block:1, teams:[
+      '@Dasha_dancelove','Две здесь','ВОСВОЯСИ','SOAK','Duetto',
+      'ПО ИНТЕРЕСАМ','@vkravtsova1','Flame Twix','@mrg_pavlova','POLIKRI','дуэт Х.О',
+    ]},
+    {id:'solo_frame', name:'Solo Frame Up', short:'Frame Up', type:'solo', block:1, teams:[
+      'Лебедева Анастасия','Мирошникова Юлия','Cherrnuha','Пашкова Алиса','Цвиркун Дарья',
+      'Кукава Эльвира','Новикова Полина','Климова Валерия','Литвякова Анна','Лихачёва Александра',
+      'Захарова Наталья','Дубовицкая Софья','Еремеева Ирина','Лященко Валерия','Алина Gloom',
+      'Илана Исакова','Некрасова Марина','Костина Юлия','Котюх Александра','Цимбалюк Полина',
+      'Корниенко Анастасия','Рыжонкова Любовь',
+    ]},
+    {id:'solo_pro', name:'Solo Pro', short:'Solo Pro', type:'solo', block:1, teams:[
+      'Мельникова Дарья','Ситора','Ловякина Елизавета','Клок Маргарита','Красова Дарья',
+      'Яковлева Алина','Полякова Александра','Соколикова Александра','Осетрова Татьяна','Абрамова Александра',
+      'Фатеева Анастасия','Корсикова Анастасия','Парыгина Алёна','Чистякова Ксения','Зуб Евгения',
+      'Баранова Елизавета','Приставка Екатерина','Милая Анастасия','Клёнова Полина','Сухова София',
+      'Демко Юлия','Мощенко Александра','Астанина Ева','Зарубкина Дарья','Глебова Юлия',
+      'Лотник Ксения','Молочко Татьяна','Болотникова Юлия','Син Инна','Трубникова Кристина',
+      'Корчагина Люсьена','Перчак Диана','Ахмякова Анастасия','Удельнов Василий','Казакова Алина',
+      'Кислюк Александра','Прибылова Елизавета','Тимирбаева Диана','Несмиянова Юля','Анищик Лада',
+      'Падей Екатерина','Пылаева Алена','Черных Анастасия','Самсонова Виктория','Шитикова Виктория',
+      'Сульковская Ирина','Мацак Кристина','Быстрова Арина','Зыбина Елизавета','Керова Ксения',
+      'Сидякина Анна','Корниенко Анастасия','Морозова Дарья','Букина Арина','Киселёва Мария',
+      'Смирнова Екатерина','Цыганкова Аня',
+    ]},
+    {id:'mini_crew', name:'Mini Crew', short:'Mini Crew', type:'crew', block:1, teams:[
+      'Nornir','Цукерочки','AVA','Bullet','LAVDO',
+      'Каблучный сбор','MAIDENS','dolls','DONNA','@vkravtsova1',
+      'LYNX','Dich Art Group','ViVibes','VI','NG','KITCH',
+    ]},
+  ],
+};
+
+// ══ HELPERS ══
+function getCrit(nom){ return nom.type==='crew' ? C.critCrew : C.critSolo; }
+function wt(s,nom){ return getCrit(nom).reduce((a,c)=>a+(parseFloat(s[c.k])||0)*c.w, 0); }
+
+// ══ DEMO DATA ══
+const COMMENTS=[
+  ['Отличная работа, чистые линии!','Хорошая энергетика, поработать над техникой','Сильное выступление!'],
+  ['Техника на высоком уровне','Нужно больше работы с образом','Уверенная подача, браво!'],
+  ['Очень стильно!','Есть потенциал, продолжать','Запоминающийся номер!'],
+  ['Красивое исполнение','Хорошая музыкальность','Отличная синхронность!'],
+];
+function rnd(a,b){return Math.round((Math.random()*(b-a)+a)*2)/2;}
+const DEMO={};
+C.noms.forEach(nom=>{
+  const bj=C.judges.map((j,ji)=>({...j,ji})).filter(j=>j.block===nom.block);
+  bj.forEach(({ji})=>{
+    if(!DEMO[ji])DEMO[ji]={};
+    if(!DEMO[ji][nom.id])DEMO[ji][nom.id]={};
+    nom.teams.forEach((_,ti)=>{
+      DEMO[ji][nom.id][ti]={
+        technique:rnd(6.5,9.5), musicality:rnd(6.5,9.5),
+        choreo:rnd(6.5,9.5),    appearance:rnd(6.5,9.5),
+        comment:COMMENTS[ji%4][ti%3]||'', saved:true,
+      };
+    });
+  });
+});
+const DEMOSUB={};
+C.noms.forEach(nom=>{
+  C.judges.map((j,ji)=>({...j,ji})).filter(j=>j.block===nom.block).forEach(({ji})=>{
+    if(!DEMOSUB[ji])DEMOSUB[ji]={};
+    DEMOSUB[ji][nom.id]=true;
+  });
+});
+const DEMOPUB={};
+C.noms.forEach(n=>DEMOPUB[n.id]=true);
+
+// ══ STORAGE ══
+function loadSc(){  return window._fbScores || DEMO; }
+function loadSub(){ return window._fbSub    || DEMOSUB; }
+function loadPub(){ return window._fbPub    || {...DEMOPUB}; }
+function savePub(p){
+  if(window._fbDb) window._fbSet(window._fbRef(window._fbDb,'published'), p);
+}
+
+// ══ STATE ══
+let curNom=0, admOpen=false;
+
+// ══ COMPUTE ══
+function compute(nomIdx){
+  const nom=C.noms[nomIdx];
+  const sc=loadSc(), sub=loadSub();
+  const bj=C.judges.map((j,ji)=>({...j,ji})).filter(j=>j.block===nom.block);
+  const jDone=bj.map(j=>sub?.[j.ji]?.[nom.id]===true);
+  const crit=getCrit(nom);
+
+  const teams=nom.teams.map((team,ti)=>{
+    const jScores=[];
+    bj.forEach((j,bi)=>{
+      if(!jDone[bi])return;
+      const s=sc?.[j.ji]?.[nom.id]?.[ti];
+      if(s)jScores.push({w:wt(s,nom),raw:s});
+    });
+    const avg=jScores.length ? jScores.reduce((a,b)=>a+b.w,0)/jScores.length : null;
+    const critAvg={};
+    crit.forEach(c=>{
+      const vs=jScores.map(js=>parseFloat(js.raw[c.k])||0);
+      critAvg[c.k]=vs.length ? vs.reduce((a,b)=>a+b,0)/vs.length : null;
+    });
+    const cmts=bj.map((j,bi)=>({
+      judge:j.name,
+      text:sc?.[j.ji]?.[nom.id]?.[ti]?.comment||'',
+      done:jDone[bi],
+    }));
+    return{team,ti,avg,critAvg,cmts};
+  });
+
+  const sorted=[...teams].filter(t=>t.avg!==null).sort((a,b)=>b.avg-a.avg);
+  const unsorted=teams.filter(t=>t.avg===null);
+  return{sorted:[...sorted,...unsorted],bj,jDone};
+}
+
+// ══ TABS ══
+function renderTabs(){
+  const t=document.getElementById('tabs'); t.innerHTML='';
+  C.noms.forEach((nom,i)=>{
+    const btn=document.createElement('div');
+    btn.className='tab'+(i===curNom?' act':'');
+    btn.textContent=nom.short;
+    btn.onclick=()=>{curNom=i;renderAll();};
+    t.appendChild(btn);
+  });
+}
+
+// ══ MAIN RENDER ══
+function renderAll(){
+  const nom=C.noms[curNom];
+  const pub=loadPub();
+  const {sorted,bj,jDone}=compute(curNom);
+  const isPublished=pub[nom.id]===true;
+  const allDone=jDone.every(Boolean);
+  const crit=getCrit(nom);
+
+  renderTabs();
+  document.getElementById('ntitle').textContent=nom.name;
+
+  // judge pills
+  document.getElementById('jpills').innerHTML=bj.map((j,bi)=>`
+    <div class="pill ${jDone[bi]?'dn':'wt'}">
+      <span class="pdot"></span>${j.name.split(' ')[0]}
+    </div>`).join('');
+
+  // criteria info
+  document.getElementById('critInfo').innerHTML=crit.map(c=>
+    `<div class="cb">${c.l} <span>${Math.round(c.w*100)}%</span></div>`
+  ).join('');
+
+  // admin panel
+  document.getElementById('admrows').innerHTML=bj.map((j,bi)=>`
+    <div class="arow ${jDone[bi]?'dn':'wt'}">
+      <span class="an"><span class="adot"></span>${j.name}</span>
+      <span class="ast">${jDone[bi]?'✓ сдал':'ожидаем'}</span>
+    </div>`).join('');
+  const pb=document.getElementById('pbtn');
+  if(isPublished){
+    pb.textContent='✓ Опубликовано'; pb.className='pbtn done'; pb.onclick=null;
+  } else {
+    pb.textContent='Опубликовать результаты'; pb.className='pbtn'; pb.onclick=publish;
+  }
+
+  const ct=document.getElementById('content');
+
+  if(!isPublished||!allDone){
+    ct.innerHTML=`<div class="pend">
+      <span class="pend-ico">⏳</span>
+      <span class="pend-t">${allDone&&!isPublished?'Ожидаем публикации':'Ожидаем оценки судей'}</span>
+      <span class="pend-s">Сдали: ${jDone.filter(Boolean).length} из ${bj.length}</span>
+    </div>`;
+    return;
+  }
+
+  // grid columns: # name + N criteria + total
+  const cols=`48px 1fr ${crit.map(()=>'76px').join(' ')} 90px`;
+
+  let html='';
+
+  // PODIUM
+  const medals=[{cls:'g',emo:'🥇',lbl:'1 место'},{cls:'s',emo:'🥈',lbl:'2 место'},{cls:'b',emo:'🥉',lbl:'3 место'}];
+  html+=`<div class="podium">`;
+  medals.forEach((m,i)=>{
+    const t=sorted[i];
+    if(!t){html+=`<div class="pc ${m.cls}"><span class="pmed">${m.emo}</span><span class="pplace">${m.lbl}</span><div class="pname">—</div><div class="pbar"></div></div>`;return;}
+    const click=i===0?`onclick="showW('${t.team.replace(/'/g,"\\'")}','${t.avg.toFixed(3)}')"`:'' ;
+    html+=`<div class="pc ${m.cls}" ${click}>
+      <span class="pmed">${m.emo}</span>
+      <span class="pplace">${m.lbl}</span>
+      <div class="pname">${t.team}</div>
+      <div class="pscore">${t.avg.toFixed(3)}</div>
+      <span class="plbl">итоговый балл</span>
+      <div class="pbar"></div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // TABLE
+  html+=`<div class="sec">Полная таблица</div>
+  <div class="tbl">
+    <div class="thead" style="grid-template-columns:${cols}">
+      <div class="th">#</div>
+      <div class="th">Участник</div>
+      ${crit.map(c=>`<div class="th r">${c.l.split(' ')[0]}</div>`).join('')}
+      <div class="th r">Итог</div>
+    </div>`;
+  sorted.forEach((t,rank)=>{
+    const r=rank+1;
+    const hasCmt=t.cmts.some(c=>c.text&&c.done);
+    html+=`<div class="trow${r<=3?' t3':''}" style="grid-template-columns:${cols};animation-delay:${rank*.04}s">
+      <div class="rnk${r<=3?' r'+r:''}">${r}</div>
+      <div><div class="tn">${t.team}</div>${hasCmt?'<div class="tc">💬 комментарии</div>':''}</div>
+      ${crit.map(c=>`<div class="sc">${t.critAvg[c.k]!=null?t.critAvg[c.k].toFixed(2):'—'}</div>`).join('')}
+      <div class="stot${r<=3?' r'+r:''}">${t.avg!=null?t.avg.toFixed(3):'—'}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // COMMENTS
+  const hasCmts=sorted.some(t=>t.cmts.some(c=>c.text&&c.done));
+  if(hasCmts){
+    html+=`<div class="sec">Комментарии судей</div>`;
+    sorted.forEach((t,rank)=>{
+      if(!t.cmts.some(c=>c.text&&c.done))return;
+      html+=`<div class="ccard">
+        <div class="cteam">${t.team}<span class="cbadge">${rank+1} место</span></div>
+        ${t.cmts.filter(c=>c.done).map(c=>`
+          <div class="jcmt">
+            <div class="jauth">${c.judge}</div>
+            <div class="jtxt">${c.text||'<span style="color:var(--bd)">без комментария</span>'}</div>
+          </div>`).join('')}
+      </div>`;
+    });
+  }
+
+  ct.innerHTML=html;
+  document.getElementById('upd').textContent='обновлено '+new Date().toLocaleTimeString('ru');
+}
+
+// ══ ACTIONS ══
+function publish(){
+  const pub=loadPub(); pub[C.noms[curNom].id]=true; savePub(pub); renderAll();
+}
+function toggleAdm(){
+  admOpen=!admOpen; document.getElementById('adm').classList.toggle('vis',admOpen);
+}
+function toggleFS(){
+  if(!document.fullscreenElement)document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+function showW(name,score){
+  document.getElementById('wnm').textContent=name;
+  document.getElementById('wsc').textContent=score+' баллов';
+  document.getElementById('wov').classList.add('vis');
+}
+function closeW(){ document.getElementById('wov').classList.remove('vis'); }
+
+renderAll();
+setInterval(renderAll,15000);
+</script>
+</body>
+</html>
