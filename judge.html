@@ -296,6 +296,7 @@
       <div class="hr">
         <span class="badge" id="jlbl">Судья</span>
         <div class="out" onclick="doLogout()">Выйти</div>
+        <div class="out" onclick="clearAll()" style="border-color:#555!important;color:#888!important;font-size:11px!important;">Сброс</div>
       </div>
     </div>
     <div class="tabs" id="tabs"></div>
@@ -612,6 +613,18 @@ function toast(ico,msg){
   document.getElementById('ti').textContent=ico;
   document.getElementById('tm').textContent=msg;
   t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function clearAll(){
+  const pass = prompt('Введите админский пароль:');
+  if(pass !== 'law2026') { toast('❌','Неверный пароль'); return; }
+  if(!confirm('Очистить ВСЕ данные? Оценки всех судей будут удалены.')) return;
+  db.ref('scores').set(null);
+  db.ref('submitted').set(null);
+  db.ref('published').set(null);
+  sc={}; sub={};
+  rTabs(); rNom();
+  toast('🗑','Все данные очищены');
 }
 
 ld();
