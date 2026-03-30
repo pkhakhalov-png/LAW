@@ -493,6 +493,8 @@ function publish(){
 }
 
 function clearAll(){
+  const pass = prompt('Введите админский пароль:');
+  if(pass !== 'law2026') { alert('Неверный пароль'); return; }
   if(!confirm('Очистить ВСЕ данные? Оценки всех судей будут удалены.')) return;
   db.ref('scores').set(null);
   db.ref('submitted').set(null);
