@@ -323,43 +323,13 @@ const C = {
 function getCrit(nom){ return nom.type==='crew' ? C.critCrew : C.critSolo; }
 function wt(s,nom){ return getCrit(nom).reduce((a,c)=>a+(parseFloat(s[c.k])||0)*c.w, 0); }
 
-// ══ DEMO DATA ══
-const COMMENTS=[
-  ['Отличная работа, чистые линии!','Хорошая энергетика, поработать над техникой','Сильное выступление!'],
-  ['Техника на высоком уровне','Нужно больше работы с образом','Уверенная подача, браво!'],
-  ['Очень стильно!','Есть потенциал, продолжать','Запоминающийся номер!'],
-  ['Красивое исполнение','Хорошая музыкальность','Отличная синхронность!'],
-];
-function rnd(a,b){return Math.round((Math.random()*(b-a)+a)*2)/2;}
-const DEMO={};
-C.noms.forEach(nom=>{
-  const bj=C.judges.map((j,ji)=>({...j,ji})).filter(j=>j.block===nom.block);
-  bj.forEach(({ji})=>{
-    if(!DEMO[ji])DEMO[ji]={};
-    if(!DEMO[ji][nom.id])DEMO[ji][nom.id]={};
-    nom.teams.forEach((_,ti)=>{
-      DEMO[ji][nom.id][ti]={
-        technique:rnd(6.5,9.5), musicality:rnd(6.5,9.5),
-        choreo:rnd(6.5,9.5),    appearance:rnd(6.5,9.5),
-        comment:COMMENTS[ji%4][ti%3]||'', saved:true,
-      };
-    });
-  });
-});
-const DEMOSUB={};
-C.noms.forEach(nom=>{
-  C.judges.map((j,ji)=>({...j,ji})).filter(j=>j.block===nom.block).forEach(({ji})=>{
-    if(!DEMOSUB[ji])DEMOSUB[ji]={};
-    DEMOSUB[ji][nom.id]=true;
-  });
-});
-const DEMOPUB={};
-C.noms.forEach(n=>DEMOPUB[n.id]=true);
-
-// ══ STORAGE ══
-function loadSc(){  return window._fbScores || DEMO; }
-function loadSub(){ return window._fbSub    || DEMOSUB; }
-function loadPub(){ return window._fbPub    || {...DEMOPUB}; }
+// ══ STORAGE — только реальные данные из Firebase ══
+function loadSc(){  return window._fbScores || {}; }
+function loadSub(){ return window._fbSub    || {}; }
+function loadPub(){ return window._fbPub    || {}; }
+function savePub(p){
+  if(window._fbDb) window._fbSet(window._fbRef(window._fbDb,'published'), p);
+}
 function savePub(p){
   if(window._fbDb) window._fbSet(window._fbRef(window._fbDb,'published'), p);
 }
