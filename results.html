@@ -30,7 +30,7 @@
   border-bottom:1px solid var(--bd)!important;
   background:rgba(10,10,15,.96)!important;
 }
-#R .logo-img{height:56px!important;object-fit:contain!important;display:block!important;margin-bottom:0!important;}
+#R .logo-img{height:220px!important;object-fit:contain!important;display:block!important;margin-bottom:0!important;}
 #R .logo-sub{
   font-size:10px!important;color:var(--mt)!important;letter-spacing:4px!important;
   text-transform:uppercase!important;margin-top:6px!important;display:block!important;
@@ -326,6 +326,7 @@
     <span class="atitle">Панель организатора</span>
     <div id="admrows"></div>
     <div class="pbtn" id="pbtn" onclick="publish()">Опубликовать результаты</div>
+    <div class="pbtn" onclick="downloadPDF()" style="background:#1c1c2a!important;border:1px solid #2a2a3d!important;margin-top:6px!important;">&#128196; Скачать PDF</div>
     <div class="pbtn grey" onclick="clearAll()" style="margin-top:6px!important;">Сброс данных</div>
   </div>
 
@@ -549,6 +550,116 @@ function renderAll(){
   }
 
   ct.innerHTML=html;
+}
+
+function downloadPDF(){
+  const nom=C.noms[curNom];
+  const{sorted,bj,jDone}=compute(curNom);
+  const crit=getCrit(nom);
+  const pub=window._pub||{};
+
+  // Build HTML for PDF
+  const medals=['I','II','III'];
+  const colors={0:'#B8860B',1:'#808080',2:'#8B4513'};
+
+  let podiumHTML='';
+  [0,1,2].forEach(i=>{
+    const t=sorted[i];
+    if(!t)return;
+    podiumHTML+=`
+      <div style="flex:1;text-align:center;padding:16px 10px;border:1px solid ${colors[i]||'#333'};border-radius:10px;margin:0 4px;background:rgba(0,0,0,.02)">
+        <div style="font-size:28px;font-weight:900;color:${colors[i]||'#333'};margin-bottom:4px">${i+1}</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">${t.team}</div>
+        <div style="font-size:22px;font-weight:900;color:${colors[i]||'#333'}">${t.avg.toFixed(3)}</div>
+        <div style="font-size:9px;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:1px">баллов</div>
+      </div>`;
+  });
+
+  let tableRows='';
+  sorted.forEach((t,rank)=>{
+    const r=rank+1;
+    const bg=r<=3?'#fffbf0':'#fff';
+    tableRows+=`
+      <tr style="background:${bg}">
+        <td style="padding:8px 10px;font-weight:700;font-size:13px;color:${colors[rank]||'#333'}">${r}</td>
+        <td style="padding:8px 10px;font-size:13px;font-weight:600">${t.team}</td>
+        ${crit.map(c=>`<td style="padding:8px 10px;text-align:right;font-size:12px">${t.critAvg[c.k]!=null?t.critAvg[c.k].toFixed(2):'—'}</td>`).join('')}
+        <td style="padding:8px 10px;text-align:right;font-weight:900;font-size:14px;color:${colors[rank]||'#222'}">${t.avg!=null?t.avg.toFixed(3):'—'}</td>
+      </tr>`;
+  });
+
+  let commentsHTML='';
+  sorted.forEach((t,rank)=>{
+    const hasCmt=t.cmts.some(c=>c.text&&c.done);
+    if(!hasCmt)return;
+    commentsHTML+=`
+      <div style="margin-bottom:16px;padding:12px 14px;border:1px solid #eee;border-radius:8px;break-inside:avoid">
+        <div style="font-weight:700;font-size:13px;margin-bottom:8px">
+          ${rank+1}. ${t.team}
+        </div>
+        ${t.cmts.filter(c=>c.done&&c.text).map(c=>`
+          <div style="display:flex;gap:10px;margin-bottom:6px">
+            <div style="font-size:11px;font-weight:700;color:#c03030;min-width:120px;padding-top:1px">${c.judge}</div>
+            <div style="font-size:12px;color:#333;font-style:italic;line-height:1.5">${c.text}</div>
+          </div>`).join('')}
+      </div>`;
+  });
+
+  const html=`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Manrope',sans-serif;color:#111;background:#fff;padding:32px;}
+  h1{font-size:28px;letter-spacing:4px;text-transform:uppercase;text-align:center;margin-bottom:4px;}
+  h2{font-size:16px;letter-spacing:3px;text-transform:uppercase;text-align:center;color:#888;margin-bottom:6px;}
+  h3{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#555;margin:24px 0 10px;border-bottom:1px solid #eee;padding-bottom:6px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{padding:8px 10px;background:#111;color:#fff;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+  th.r{text-align:right;}
+  tr:nth-child(even){background:#f9f9f9;}
+  .criteria-note{font-size:10px;color:#888;margin-bottom:12px;}
+  @media print{body{padding:16px;}}
+</style>
+</head>
+<body>
+  <div style="text-align:center;margin-bottom:24px">
+    <img src="https://i.ibb.co/0p0Dk0k8/Chat-GPT-Image-30-2026-23-47-28.png" style="height:80px;object-fit:contain;margin-bottom:12px">
+    <h1>${nom.name}</h1>
+    <h2>Результаты · LAW Dance Competition</h2>
+    <div style="font-size:11px;color:#aaa;margin-top:4px">${new Date().toLocaleDateString('ru',{day:'numeric',month:'long',year:'numeric'})}</div>
+  </div>
+
+  <h3>Призёры</h3>
+  <div style="display:flex;gap:8px;margin-bottom:24px">
+    ${podiumHTML}
+  </div>
+
+  <h3>Полная таблица</h3>
+  <div class="criteria-note">Критерии: ${crit.map(c=>`${c.l} ${Math.round(c.w*100)}%`).join(' · ')}</div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Участник</th>
+        ${crit.map(c=>`<th class="r">${c.l.split(' ')[0]}</th>`).join('')}
+        <th class="r">Итог</th>
+      </tr>
+    </thead>
+    <tbody>${tableRows}</tbody>
+  </table>
+
+  ${commentsHTML?`<h3>Комментарии судей</h3>${commentsHTML}`:''}
+</body>
+</html>`;
+
+  // Open in new window and print
+  const win=window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+  win.onload=()=>{ win.focus(); win.print(); };
 }
 
 function publish(){
