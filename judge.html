@@ -414,7 +414,10 @@ function sv(){
   db.ref('scores').set(sc);
   db.ref('submitted').set(sub);
 }
-function gs(j,nid,t){return sc?.[j]?.[nid]?.[t]||{technique:5,musicality:5,choreo:5,appearance:5,comment:'',saved:false};}
+function gs(j,nid,t){
+  const nd=sc?.[j]?.[nid];
+  return (nd?.[t] ?? nd?.[String(t)]) || {technique:5,musicality:5,choreo:5,appearance:5,comment:'',saved:false};
+}
 function ss(j,nid,t,f,v){if(!sc[j])sc[j]={};if(!sc[j][nid])sc[j][nid]={};if(!sc[j][nid][t])sc[j][nid][t]={technique:5,musicality:5,choreo:5,appearance:5,comment:'',saved:false};sc[j][nid][t][f]=v;sc[j][nid][t].saved=false;sv();}
 function getCrit(nomIdx){const nom=C.noms[nomIdx];return nom.critType==='crew'?C.critCrew:C.critSolo;}
 function wt(s,nomIdx){return getCrit(nomIdx).reduce((a,c)=>a+(parseFloat(s[c.k])||0)*c.w,0);}
