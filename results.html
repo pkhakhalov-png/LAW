@@ -489,7 +489,7 @@ function renderAll(){
   let html='';
 
   // PODIUM
-  const order=[1,0,2]; // silver, gold, bronze — gold in middle
+  const order=[1,0,2];
   html+=`<div class="podium-wrap">`;
   order.forEach(rank=>{
     const t=sorted[rank];
@@ -511,26 +511,37 @@ function renderAll(){
   });
   html+=`</div>`;
 
-  // TABLE
+  // TABLE — используем <table> чтобы текст не ехал
   html+=`<div class="sec">Полная таблица</div>
-  <div class="tbl">
-    <div class="thead" style="grid-template-columns:${cols}">
-      <div class="th">#</div>
-      <div class="th">Участник</div>
-      ${crit.map(c=>`<div class="th r">${c.l.split(' ')[0]}</div>`).join('')}
-      <div class="th r">Итог</div>
-    </div>`;
+  <div class="tbl" style="overflow-x:auto!important">
+  <table style="width:100%;border-collapse:collapse;min-width:500px">
+    <thead>
+      <tr>
+        <th style="padding:10px 14px;background:#1c1c2a;color:#6b6b8a;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;text-align:left;white-space:nowrap">#</th>
+        <th style="padding:10px 14px;background:#1c1c2a;color:#6b6b8a;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;text-align:left">Участник</th>
+        ${crit.map(c=>`<th style="padding:10px 14px;background:#1c1c2a;color:#6b6b8a;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;text-align:right;white-space:nowrap">${c.l}</th>`).join('')}
+        <th style="padding:10px 14px;background:#1c1c2a;color:#6b6b8a;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;text-align:right;white-space:nowrap">Итог</th>
+      </tr>
+    </thead>
+    <tbody>`;
   sorted.forEach((t,rank)=>{
     const r=rank+1;
+    const goldC='#FFD700', silvC='#C0C0C0', brnzC='#CD7F32';
+    const rnkColor=r===1?goldC:r===2?silvC:r===3?brnzC:'#2a2a3d';
+    const rnkTextColor=r===1?goldC:r===2?silvC:r===3?brnzC:'#6b6b8a';
+    const rowBg=r<=3?'rgba(224,53,53,.04)':'transparent';
     const hasCmt=t.cmts.some(c=>c.text&&c.done);
-    html+=`<div class="trow${r<=3?' t3':''}" style="grid-template-columns:${cols}">
-      <div class="rnk${r<=3?' r'+r:''}">${r}</div>
-      <div><div class="tn">${t.team}</div>${hasCmt?'<div class="tc">комментарии судей</div>':''}</div>
-      ${crit.map(c=>`<div class="sc">${t.critAvg[c.k]!=null?t.critAvg[c.k].toFixed(2):'—'}</div>`).join('')}
-      <div class="stot${r<=3?' r'+r:''}">${t.avg!=null?t.avg.toFixed(3):'—'}</div>
-    </div>`;
+    html+=`<tr style="background:${rowBg};border-bottom:1px solid #2a2a3d">
+      <td style="padding:13px 14px;font-family:'Bebas Neue',sans-serif;font-size:22px;color:${rnkTextColor};white-space:nowrap">${r}</td>
+      <td style="padding:13px 14px">
+        <div style="font-size:14px;font-weight:700;color:#f0f0f5">${t.team}</div>
+        ${hasCmt?`<div style="font-size:11px;color:#6b6b8a;margin-top:2px;font-style:italic">есть комментарии</div>`:''}
+      </td>
+      ${crit.map(c=>`<td style="padding:13px 14px;text-align:right;font-size:14px;font-weight:600;color:#f0f0f5;white-space:nowrap">${t.critAvg[c.k]!=null?t.critAvg[c.k].toFixed(2):'—'}</td>`).join('')}
+      <td style="padding:13px 14px;text-align:right;font-family:'Bebas Neue',sans-serif;font-size:22px;color:${r<=3?rnkTextColor:'#e03535'};white-space:nowrap">${t.avg!=null?t.avg.toFixed(3):'—'}</td>
+    </tr>`;
   });
-  html+=`</div>`;
+  html+=`</tbody></table></div>`;
 
   // COMMENTS
   const hasCmts=sorted.some(t=>t.cmts.some(c=>c.text&&c.done));
