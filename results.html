@@ -406,7 +406,9 @@ function compute(nomIdx){
     const jScores=[];
     bj.forEach((j,bi)=>{
       if(!jDone[bi])return;
-      const s=sc?.[j.ji]?.[nom.id]?.[ti];
+      // Firebase keys are strings — try both string and number
+      const nomData=sc?.[j.ji]?.[nom.id];
+      const s=nomData?.[ti] ?? nomData?.[String(ti)];
       if(s)jScores.push({w:wt(s,nom),raw:s});
     });
     const avg=jScores.length?jScores.reduce((a,b)=>a+b.w,0)/jScores.length:null;
@@ -415,11 +417,15 @@ function compute(nomIdx){
       const vs=jScores.map(js=>parseFloat(js.raw[c.k])||0);
       critAvg[c.k]=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
     });
-    const cmts=bj.map((j,bi)=>({
-      judge:j.name,
-      text:sc?.[j.ji]?.[nom.id]?.[ti]?.comment||'',
-      done:jDone[bi],
-    }));
+    const cmts=bj.map((j,bi)=>{
+      const nomData=sc?.[j.ji]?.[nom.id];
+      const s=nomData?.[ti] ?? nomData?.[String(ti)];
+      return{
+        judge:j.name,
+        text:s?.comment||'',
+        done:jDone[bi],
+      };
+    });
     return{team,ti,avg,critAvg,cmts};
   });
   const sorted=[...teams].filter(t=>t.avg!==null).sort((a,b)=>b.avg-a.avg);
