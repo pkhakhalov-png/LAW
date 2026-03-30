@@ -16,16 +16,30 @@
 }
 #R button,#R input,#R textarea{all:unset!important;box-sizing:border-box!important;font-family:'Manrope',sans-serif!important;}
 
+/* BG */
 #R .bg{position:fixed!important;inset:0!important;pointer-events:none!important;z-index:0!important;
-  background:radial-gradient(ellipse 50% 40% at 85% 15%,rgba(224,53,53,.07) 0%,transparent 60%),
-             radial-gradient(ellipse 40% 50% at 10% 85%,rgba(255,107,53,.05) 0%,transparent 60%)!important;}
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(224,53,53,.09) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 50% at 10% 85%,rgba(255,107,53,.05) 0%,transparent 60%)!important;}
 
-/* HEADER */
-#R .hdr{display:flex!important;align-items:center!important;justify-content:space-between!important;
-  padding:0 20px!important;height:58px!important;flex-shrink:0!important;z-index:2!important;
-  background:rgba(10,10,15,.96)!important;border-bottom:1px solid var(--bd)!important;}
-#R .hright{display:flex!important;align-items:center!important;gap:10px!important;}
-#R .live{display:flex!important;align-items:center!important;gap:7px!important;
+/* ── LOGO HEADER ── */
+#R .logo-wrap{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  justify-content:center!important;padding:24px 20px 12px!important;
+  flex-shrink:0!important;z-index:2!important;position:relative!important;
+  border-bottom:1px solid var(--bd)!important;
+  background:rgba(10,10,15,.96)!important;
+}
+#R .logo-img{height:56px!important;object-fit:contain!important;display:block!important;margin-bottom:0!important;}
+#R .logo-sub{
+  font-size:10px!important;color:var(--mt)!important;letter-spacing:4px!important;
+  text-transform:uppercase!important;margin-top:6px!important;display:block!important;
+}
+#R .hright{
+  position:absolute!important;right:16px!important;top:50%!important;transform:translateY(-50%)!important;
+  display:flex!important;align-items:center!important;gap:8px!important;
+}
+#R .live{display:flex!important;align-items:center!important;gap:6px!important;
   background:rgba(248,113,113,.12)!important;border:1px solid rgba(248,113,113,.3)!important;
   color:#f87171!important;padding:4px 12px!important;border-radius:20px!important;
   font-size:11px!important;font-weight:700!important;letter-spacing:1px!important;}
@@ -33,74 +47,150 @@
   animation:lp 1.5s ease-in-out infinite!important;}
 @keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 #R .fsbtn{background:var(--s2)!important;border:1px solid var(--bd)!important;color:var(--mt)!important;
-  padding:6px 14px!important;border-radius:8px!important;cursor:pointer!important;
-  font-size:12px!important;transition:all .2s!important;}
+  padding:5px 12px!important;border-radius:8px!important;cursor:pointer!important;
+  font-size:11px!important;transition:all .2s!important;}
 #R .fsbtn:hover{border-color:var(--a)!important;color:var(--a)!important;}
-#R .upd{font-size:11px!important;color:var(--mt)!important;}
 
-/* TABS */
+/* ── TABS ── */
 #R .tabs{display:flex!important;padding:0 16px!important;border-bottom:1px solid var(--bd)!important;
   flex-shrink:0!important;background:#0a0a0f!important;overflow-x:auto!important;
   scrollbar-width:none!important;z-index:2!important;}
 #R .tabs::-webkit-scrollbar{display:none!important;}
 #R .tab{background:none!important;border:none!important;border-bottom:2px solid transparent!important;
-  color:var(--mt)!important;padding:13px 16px!important;font-size:13px!important;font-weight:600!important;
-  white-space:nowrap!important;cursor:pointer!important;margin-bottom:-1px!important;
-  transition:color .2s!important;}
+  color:var(--mt)!important;padding:12px 16px!important;font-size:13px!important;font-weight:600!important;
+  white-space:nowrap!important;cursor:pointer!important;margin-bottom:-1px!important;transition:color .2s!important;}
 #R .tab:hover{color:#f0f0f5!important;}
 #R .tab.act{color:var(--a)!important;border-bottom-color:var(--a)!important;}
 
-/* SCROLL */
-#R .main{flex:1!important;overflow-y:auto!important;padding:28px 20px!important;z-index:1!important;
+/* ── SCROLL ── */
+#R .main{flex:1!important;overflow-y:auto!important;padding:28px 20px 40px!important;z-index:1!important;
   scrollbar-width:thin!important;scrollbar-color:var(--bd) transparent!important;}
-#R .main::-webkit-scrollbar{width:4px!important;}
+#R .main::-webkit-scrollbar{width:3px!important;}
 #R .main::-webkit-scrollbar-thumb{background:var(--bd)!important;border-radius:2px!important;}
 
-/* STATUS */
+/* ── NOM HEADER ── */
 #R .srow{display:flex!important;align-items:center!important;justify-content:space-between!important;
-  margin-bottom:28px!important;flex-wrap:wrap!important;gap:10px!important;}
-#R .ntitle{font-family:'Bebas Neue',sans-serif!important;font-size:36px!important;letter-spacing:3px!important;}
-#R .jpills{display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
-#R .pill{display:flex!important;align-items:center!important;gap:6px!important;padding:5px 12px!important;
+  margin-bottom:10px!important;flex-wrap:wrap!important;gap:8px!important;}
+#R .ntitle{font-family:'Bebas Neue',sans-serif!important;font-size:32px!important;letter-spacing:3px!important;}
+#R .jpills{display:flex!important;gap:6px!important;flex-wrap:wrap!important;}
+#R .pill{display:flex!important;align-items:center!important;gap:5px!important;padding:4px 10px!important;
   border-radius:20px!important;font-size:11px!important;font-weight:600!important;border:1px solid!important;}
 #R .pill.dn{background:rgba(74,222,128,.08)!important;border-color:rgba(74,222,128,.3)!important;color:var(--ok)!important;}
 #R .pill.wt{background:rgba(107,107,138,.1)!important;border-color:var(--bd)!important;color:var(--mt)!important;}
-#R .pdot{width:6px!important;height:6px!important;border-radius:50%!important;background:currentColor!important;}
+#R .pdot{width:5px!important;height:5px!important;border-radius:50%!important;background:currentColor!important;}
 
-/* CRITERIA BADGE */
-#R .crit-info{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin-bottom:24px!important;}
+/* criteria badges */
+#R .crit-info{display:flex!important;gap:6px!important;flex-wrap:wrap!important;margin-bottom:24px!important;}
 #R .cb{background:var(--s2)!important;border:1px solid var(--bd)!important;border-radius:8px!important;
-  padding:5px 12px!important;font-size:11px!important;color:var(--mt)!important;}
+  padding:4px 10px!important;font-size:11px!important;color:var(--mt)!important;}
 #R .cb span{color:var(--a)!important;font-weight:700!important;}
 
-/* PODIUM */
-#R .podium{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:10px!important;margin-bottom:32px!important;align-items:end!important;}
-#R .pc{border-radius:14px!important;padding:20px 12px!important;text-align:center!important;
-  border:1px solid!important;position:relative!important;overflow:hidden!important;
-  transition:transform .25s!important;animation:ri .5s ease both!important;}
-#R .pc:hover{transform:translateY(-4px)!important;}
-@keyframes ri{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-#R .pc.g{background:linear-gradient(145deg,rgba(255,215,0,.14),rgba(255,215,0,.04))!important;border-color:rgba(255,215,0,.4)!important;animation-delay:.05s!important;}
-#R .pc.s{background:linear-gradient(145deg,rgba(192,192,192,.1),rgba(192,192,192,.03))!important;border-color:rgba(192,192,192,.3)!important;animation-delay:.15s!important;}
-#R .pc.b{background:linear-gradient(145deg,rgba(205,127,50,.1),rgba(205,127,50,.03))!important;border-color:rgba(205,127,50,.3)!important;animation-delay:.25s!important;}
-#R .pmed{font-size:32px!important;display:block!important;margin-bottom:6px!important;}
-#R .pplace{font-family:'Bebas Neue',sans-serif!important;font-size:11px!important;letter-spacing:3px!important;color:var(--mt)!important;display:block!important;margin-bottom:5px!important;}
-#R .pname{font-size:13px!important;font-weight:800!important;margin-bottom:8px!important;line-height:1.2!important;}
-#R .pc.g .pname{color:var(--gold)!important;}
-#R .pc.s .pname{color:var(--silv)!important;}
-#R .pc.b .pname{color:var(--brnz)!important;}
-#R .pscore{font-family:'Bebas Neue',sans-serif!important;font-size:34px!important;line-height:1!important;}
-#R .pc.g .pscore{color:var(--gold)!important;}
-#R .pc.s .pscore{color:var(--silv)!important;}
-#R .pc.b .pscore{color:var(--brnz)!important;}
-#R .plbl{font-size:10px!important;color:var(--mt)!important;text-transform:uppercase!important;letter-spacing:1px!important;margin-top:2px!important;display:block!important;}
-#R .pbar{position:absolute!important;bottom:0!important;left:0!important;right:0!important;height:3px!important;}
-#R .pc.g .pbar{background:var(--gold)!important;}
-#R .pc.s .pbar{background:var(--silv)!important;}
-#R .pc.b .pbar{background:var(--brnz)!important;}
+/* ── PODIUM ── */
+#R .podium-wrap{
+  display:flex!important;align-items:flex-end!important;justify-content:center!important;
+  gap:0!important;margin-bottom:40px!important;
+}
 
-/* TABLE */
-#R .sec{font-family:'Bebas Neue',sans-serif!important;font-size:17px!important;letter-spacing:2px!important;
+#R .pod{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  position:relative!important;
+}
+
+/* Card above podium */
+#R .pod-card{
+  border-radius:14px!important;padding:20px 16px 16px!important;text-align:center!important;
+  border:1px solid!important;position:relative!important;overflow:hidden!important;
+  width:220px!important;margin-bottom:-1px!important;
+  transition:transform .3s!important;
+}
+#R .pod-card:hover{transform:translateY(-4px)!important;}
+
+#R .pod.first .pod-card{
+  background:linear-gradient(160deg,rgba(255,215,0,.15),rgba(255,215,0,.04))!important;
+  border-color:rgba(255,215,0,.5)!important;
+  animation:riseIn .6s ease .05s both!important;
+  width:260px!important;
+}
+#R .pod.second .pod-card{
+  background:linear-gradient(160deg,rgba(192,192,192,.12),rgba(192,192,192,.03))!important;
+  border-color:rgba(192,192,192,.35)!important;
+  animation:riseIn .6s ease .15s both!important;
+}
+#R .pod.third .pod-card{
+  background:linear-gradient(160deg,rgba(205,127,50,.12),rgba(205,127,50,.03))!important;
+  border-color:rgba(205,127,50,.35)!important;
+  animation:riseIn .6s ease .25s both!important;
+}
+@keyframes riseIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* Place number badge */
+#R .place-badge{
+  width:40px!important;height:40px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-family:'Bebas Neue',sans-serif!important;font-size:20px!important;
+  margin:0 auto 12px!important;border:2px solid!important;
+}
+#R .pod.first .place-badge{background:rgba(255,215,0,.15)!important;border-color:var(--gold)!important;color:var(--gold)!important;}
+#R .pod.second .place-badge{background:rgba(192,192,192,.1)!important;border-color:var(--silv)!important;color:var(--silv)!important;}
+#R .pod.third .place-badge{background:rgba(205,127,50,.1)!important;border-color:var(--brnz)!important;color:var(--brnz)!important;}
+
+#R .pod-name{
+  font-size:14px!important;font-weight:800!important;margin-bottom:10px!important;
+  line-height:1.2!important;
+}
+#R .pod.first .pod-name{color:var(--gold)!important;font-size:16px!important;}
+#R .pod.second .pod-name{color:var(--silv)!important;}
+#R .pod.third .pod-name{color:var(--brnz)!important;}
+
+#R .pod-score{
+  font-family:'Bebas Neue',sans-serif!important;font-size:36px!important;line-height:1!important;
+}
+#R .pod.first .pod-score{color:var(--gold)!important;font-size:44px!important;}
+#R .pod.second .pod-score{color:var(--silv)!important;}
+#R .pod.third .pod-score{color:var(--brnz)!important;}
+
+#R .pod-lbl{font-size:10px!important;color:var(--mt)!important;letter-spacing:1px!important;
+  text-transform:uppercase!important;margin-top:2px!important;display:block!important;}
+
+/* Glow line at bottom of card */
+#R .pod-glow{
+  position:absolute!important;bottom:0!important;left:0!important;right:0!important;height:2px!important;
+}
+#R .pod.first .pod-glow{background:linear-gradient(90deg,transparent,var(--gold),transparent)!important;}
+#R .pod.second .pod-glow{background:linear-gradient(90deg,transparent,var(--silv),transparent)!important;}
+#R .pod.third .pod-glow{background:linear-gradient(90deg,transparent,var(--brnz),transparent)!important;}
+
+/* Podium platform */
+#R .platform{
+  width:100%!important;display:flex!important;align-items:flex-end!important;
+  justify-content:center!important;
+}
+#R .plat-block{
+  border-radius:6px 6px 0 0!important;width:100%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-family:'Bebas Neue',sans-serif!important;font-size:11px!important;letter-spacing:2px!important;
+}
+#R .pod.first .plat-block{
+  height:80px!important;
+  background:linear-gradient(180deg,rgba(255,215,0,.18),rgba(255,215,0,.06))!important;
+  border:1px solid rgba(255,215,0,.3)!important;color:rgba(255,215,0,.5)!important;
+  animation:riseIn .5s ease .3s both!important;
+}
+#R .pod.second .plat-block{
+  height:50px!important;
+  background:linear-gradient(180deg,rgba(192,192,192,.12),rgba(192,192,192,.04))!important;
+  border:1px solid rgba(192,192,192,.2)!important;color:rgba(192,192,192,.4)!important;
+  animation:riseIn .5s ease .4s both!important;
+}
+#R .pod.third .plat-block{
+  height:30px!important;
+  background:linear-gradient(180deg,rgba(205,127,50,.12),rgba(205,127,50,.04))!important;
+  border:1px solid rgba(205,127,50,.2)!important;color:rgba(205,127,50,.4)!important;
+  animation:riseIn .5s ease .5s both!important;
+}
+
+/* ── TABLE ── */
+#R .sec{font-family:'Bebas Neue',sans-serif!important;font-size:16px!important;letter-spacing:2px!important;
   color:var(--mt)!important;display:flex!important;align-items:center!important;gap:10px!important;margin-bottom:10px!important;}
 #R .sec::after{content:''!important;flex:1!important;height:1px!important;background:var(--bd)!important;}
 #R .tbl{background:var(--s)!important;border:1px solid var(--bd)!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:28px!important;}
@@ -110,7 +200,7 @@
 #R .trow{display:grid!important;padding:13px 16px!important;border-bottom:1px solid var(--bd)!important;align-items:center!important;transition:background .15s!important;}
 #R .trow:last-child{border-bottom:none!important;}
 #R .trow:hover{background:rgba(255,255,255,.02)!important;}
-#R .trow.t3{background:rgba(224,53,53,.04)!important;}
+#R .trow.t3{background:rgba(224,53,53,.03)!important;}
 #R .rnk{font-family:'Bebas Neue',sans-serif!important;font-size:22px!important;color:var(--bd)!important;}
 #R .rnk.r1{color:var(--gold)!important;}
 #R .rnk.r2{color:var(--silv)!important;}
@@ -123,7 +213,7 @@
 #R .stot.r2{color:var(--silv)!important;}
 #R .stot.r3{color:var(--brnz)!important;}
 
-/* COMMENTS */
+/* ── COMMENTS ── */
 #R .ccard{background:var(--s)!important;border:1px solid var(--bd)!important;border-radius:12px!important;padding:16px 18px!important;margin-bottom:10px!important;}
 #R .cteam{font-size:13px!important;font-weight:700!important;margin-bottom:10px!important;display:flex!important;align-items:center!important;gap:8px!important;}
 #R .cbadge{background:var(--s2)!important;border:1px solid var(--bd)!important;padding:2px 10px!important;border-radius:10px!important;font-size:11px!important;color:var(--mt)!important;}
@@ -132,7 +222,7 @@
 #R .jauth{font-size:11px!important;color:var(--a)!important;font-weight:600!important;white-space:nowrap!important;min-width:110px!important;padding-top:2px!important;}
 #R .jtxt{font-size:13px!important;line-height:1.5!important;font-style:italic!important;}
 
-/* ADMIN */
+/* ── ADMIN ── */
 #R .atog{position:fixed!important;bottom:18px!important;right:18px!important;z-index:50!important;
   width:42px!important;height:42px!important;background:var(--s2)!important;border:1px solid var(--bd)!important;
   border-radius:50%!important;color:var(--mt)!important;font-size:17px!important;cursor:pointer!important;
@@ -140,7 +230,7 @@
 #R .atog:hover{border-color:var(--a)!important;color:var(--a)!important;}
 #R .adm{position:fixed!important;bottom:70px!important;right:18px!important;z-index:50!important;
   background:var(--s)!important;border:1px solid var(--bd)!important;border-radius:14px!important;
-  padding:16px!important;width:250px!important;display:none!important;box-shadow:0 20px 60px rgba(0,0,0,.5)!important;}
+  padding:16px!important;width:260px!important;display:none!important;box-shadow:0 20px 60px rgba(0,0,0,.5)!important;}
 #R .adm.vis{display:block!important;}
 #R .atitle{font-size:10px!important;text-transform:uppercase!important;letter-spacing:2px!important;color:var(--mt)!important;margin-bottom:10px!important;display:block!important;}
 #R .arow{display:flex!important;align-items:center!important;justify-content:space-between!important;font-size:12px!important;margin-bottom:7px!important;}
@@ -152,34 +242,53 @@
 #R .arow.dn .ast{color:var(--ok)!important;}
 #R .pbtn{display:block!important;width:100%!important;background:var(--a)!important;color:#fff!important;
   border-radius:10px!important;padding:10px!important;font-size:13px!important;font-weight:700!important;
-  cursor:pointer!important;text-align:center!important;margin-top:12px!important;transition:all .2s!important;}
+  cursor:pointer!important;text-align:center!important;margin-top:8px!important;transition:all .2s!important;}
 #R .pbtn:hover{background:#c02020!important;}
-#R .pbtn.done{background:var(--ok)!important;color:#0a0a0f!important;cursor:default!important;}
+#R .pbtn.grey{background:#2a2a3d!important;color:var(--mt)!important;font-size:11px!important;}
 
-/* WINNER */
+/* ── PENDING ── */
+#R .pend{text-align:center!important;padding:60px 20px!important;}
+#R .pend-ico{
+  width:64px!important;height:64px!important;border-radius:50%!important;
+  border:2px solid var(--bd)!important;display:flex!important;align-items:center!important;
+  justify-content:center!important;margin:0 auto 20px!important;
+  font-size:28px!important;color:var(--mt)!important;
+}
+#R .pend-t{font-family:'Bebas Neue',sans-serif!important;font-size:24px!important;letter-spacing:3px!important;color:var(--mt)!important;margin-bottom:8px!important;display:block!important;}
+#R .pend-s{font-size:13px!important;color:var(--mt)!important;line-height:1.6!important;}
+
+/* ── WINNER OVERLAY ── */
 #R .wov{position:fixed!important;inset:0!important;z-index:200!important;
-  background:rgba(10,10,15,.97)!important;display:none!important;
+  background:rgba(10,10,15,.98)!important;display:none!important;
   align-items:center!important;justify-content:center!important;flex-direction:column!important;text-align:center!important;}
 #R .wov.vis{display:flex!important;}
-#R .wico{font-size:80px!important;margin-bottom:14px!important;animation:pop .5s ease!important;}
-@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
-#R .wpl{font-family:'Bebas Neue',sans-serif!important;font-size:16px!important;letter-spacing:6px!important;color:var(--mt)!important;margin-bottom:10px!important;}
-#R .wnm{font-family:'Bebas Neue',sans-serif!important;font-size:64px!important;letter-spacing:3px!important;
-  background:linear-gradient(135deg,var(--gold),var(--a2))!important;
+#R .w-crown{
+  width:80px!important;height:80px!important;margin-bottom:20px!important;
+  animation:pop .5s cubic-bezier(.34,1.56,.64,1) both!important;
+}
+@keyframes pop{from{opacity:0;transform:scale(0) rotate(-15deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+#R .wpl{font-family:'Bebas Neue',sans-serif!important;font-size:14px!important;letter-spacing:8px!important;color:var(--mt)!important;margin-bottom:12px!important;}
+#R .wnm{
+  font-family:'Bebas Neue',sans-serif!important;font-size:clamp(36px,8vw,80px)!important;letter-spacing:3px!important;
+  background:linear-gradient(135deg,var(--gold),#fff5a0,var(--gold))!important;
   -webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;
-  line-height:1!important;margin-bottom:10px!important;}
-#R .wsc{font-family:'Bebas Neue',sans-serif!important;font-size:40px!important;color:var(--gold)!important;margin-bottom:24px!important;}
-#R .wcl{background:var(--s2)!important;border:1px solid var(--bd)!important;color:var(--mt)!important;
-  padding:9px 26px!important;border-radius:10px!important;cursor:pointer!important;font-size:13px!important;}
-
-/* PENDING */
-#R .pend{text-align:center!important;padding:70px 20px!important;}
-#R .pend-ico{font-size:52px!important;display:block!important;margin-bottom:16px!important;}
-#R .pend-t{font-family:'Bebas Neue',sans-serif!important;font-size:26px!important;letter-spacing:3px!important;color:var(--mt)!important;margin-bottom:8px!important;display:block!important;}
-#R .pend-s{font-size:13px!important;color:var(--mt)!important;}
+  line-height:1!important;margin-bottom:12px!important;
+  animation:shimmer 2s linear infinite!important;
+  background-size:200%!important;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+#R .wsc{font-family:'Bebas Neue',sans-serif!important;font-size:36px!important;color:rgba(255,215,0,.6)!important;margin-bottom:28px!important;}
+#R .wcl{
+  background:transparent!important;border:1px solid var(--bd)!important;color:var(--mt)!important;
+  padding:9px 26px!important;border-radius:10px!important;cursor:pointer!important;font-size:13px!important;
+  transition:all .2s!important;
+}
+#R .wcl:hover{border-color:var(--a)!important;color:var(--a)!important;}
 
 @media(max-width:600px){
-  #R .podium{grid-template-columns:1fr!important;}
+  #R .podium-wrap{flex-direction:column!important;align-items:center!important;}
+  #R .pod-card{width:100%!important;max-width:300px!important;}
+  #R .pod.first .pod-card{width:100%!important;}
   #R .main{padding:16px!important;}
 }
 </style>
@@ -188,18 +297,20 @@
 <div id="R">
   <div class="bg"></div>
 
-  <div class="hdr">
-    <img src="https://i.ibb.co/0p0Dk0k8/Chat-GPT-Image-30-2026-23-47-28.png"
-         style="height:36px!important;object-fit:contain!important;display:block!important;">
+  <!-- LOGO HEADER -->
+  <div class="logo-wrap">
+    <img class="logo-img" src="https://i.ibb.co/0p0Dk0k8/Chat-GPT-Image-30-2026-23-47-28.png" alt="LAW">
+    <span class="logo-sub">Dance Competition · Results</span>
     <div class="hright">
       <div class="live"><div class="ldot"></div>LIVE</div>
-      <span class="upd" id="upd">—</span>
-      <div class="fsbtn" onclick="toggleFS()">⛶ Fullscreen</div>
+      <div class="fsbtn" onclick="toggleFS()">&#x26F6; Fullscreen</div>
     </div>
   </div>
 
+  <!-- TABS -->
   <div class="tabs" id="tabs"></div>
 
+  <!-- MAIN -->
   <div class="main" id="main">
     <div class="srow">
       <span class="ntitle" id="ntitle">—</span>
@@ -209,16 +320,24 @@
     <div id="content"></div>
   </div>
 
-  <div class="atog" onclick="toggleAdm()">⚙</div>
+  <!-- ADMIN -->
+  <div class="atog" onclick="toggleAdm()">&#9881;</div>
   <div class="adm" id="adm">
     <span class="atitle">Панель организатора</span>
     <div id="admrows"></div>
     <div class="pbtn" id="pbtn" onclick="publish()">Опубликовать результаты</div>
-    <div class="pbtn" onclick="clearAll()" style="background:#333!important;margin-top:8px!important;font-size:11px!important;">🗑 Очистить все данные</div>
+    <div class="pbtn grey" onclick="clearAll()" style="margin-top:6px!important;">Сброс данных</div>
   </div>
 
+  <!-- WINNER OVERLAY -->
   <div class="wov" id="wov">
-    <div class="wico">🏆</div>
+    <svg class="w-crown" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 50 L15 20 L30 38 L40 10 L50 38 L65 20 L75 50 Z" fill="#FFD700" opacity=".9"/>
+      <circle cx="5" cy="50" r="5" fill="#FFD700"/>
+      <circle cx="40" cy="10" r="5" fill="#FFD700"/>
+      <circle cx="75" cy="50" r="5" fill="#FFD700"/>
+      <rect x="3" y="52" width="74" height="8" rx="4" fill="#FFD700" opacity=".7"/>
+    </svg>
     <div class="wpl">ПОБЕДИТЕЛЬ</div>
     <div class="wnm" id="wnm">—</div>
     <div class="wsc" id="wsc">—</div>
@@ -226,30 +345,27 @@
   </div>
 </div>
 
-<!-- Firebase compat SDK -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script>
 firebase.initializeApp({
-  apiKey: "AIzaSyA1xkiAfHRKVCQDCmatrWLolEphtgwXOd0",
-  authDomain: "kulakovalaw.firebaseapp.com",
-  databaseURL: "https://kulakovalaw-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "kulakovalaw",
-  storageBucket: "kulakovalaw.firebasestorage.app",
-  messagingSenderId: "569728367844",
-  appId: "1:569728367844:web:6c888f00d010b5fde2c0f1"
+  apiKey:"AIzaSyA1xkiAfHRKVCQDCmatrWLolEphtgwXOd0",
+  authDomain:"kulakovalaw.firebaseapp.com",
+  databaseURL:"https://kulakovalaw-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"kulakovalaw",
+  storageBucket:"kulakovalaw.firebasestorage.app",
+  messagingSenderId:"569728367844",
+  appId:"1:569728367844:web:6c888f00d010b5fde2c0f1"
 });
-const db = firebase.database();
-
-// Слушаем изменения в реальном времени
-db.ref('scores').on('value',    snap=>{ window._fbScores = snap.val()||{}; renderAll(); });
-db.ref('submitted').on('value', snap=>{ window._fbSub    = snap.val()||{}; renderAll(); });
-db.ref('published').on('value', snap=>{ window._fbPub    = snap.val()||{}; renderAll(); });
+const db=firebase.database();
+db.ref('scores').on('value',    s=>{ window._sc  = s.val()||{}; renderAll(); });
+db.ref('submitted').on('value', s=>{ window._sub = s.val()||{}; renderAll(); });
+db.ref('published').on('value', s=>{ window._pub = s.val()||{}; renderAll(); });
 </script>
 
 <script>
-// ══ CONFIG ══
-const C = {
+const C={
   judges:[
     {name:'Деки',          block:1},
     {name:'Полли Оричи',   block:1},
@@ -269,72 +385,23 @@ const C = {
     {k:'appearance', l:'Внешний вид',          w:.20},
   ],
   noms:[
-    {id:'solo_beg', name:'Solo Beginners', short:'Solo Beg', type:'solo', block:1, teams:[
-      'Портнова Анна','Меньших Дарья','Кораблина Стефания','Гончарова Дарья','Гаспарян Анжела',
-      'Давыдова Эвелина','Бутко Мария','Улыбина Татьяна','Бернадская Анна','Терещенко София',
-      'Еремеева Маргарита','Кузóра Карина','Наимова Виктория','Шахова София','Грабежева Жанна',
-      'Бойкова Юлия','Колесникова Ева','Павлова Маргарита','Ажнина Светлана','Лаптева Варвара',
-      'Окутина Мария','Гайфутдинова Валерия','Зотова Валерия','Григорьева Алиса','Мельникова Кристина',
-      'Бондарева Дарья','Мартынова Кристина','Лавриненко Екатерина','Афанасьева Екатерина','Нафикова Алина',
-      'Дмитриева Ирина','Маркитан Анастасия','Ким Александра','Казеннова Юлия','Бондарь Анна',
-      'Кугаевская Елизавета','Никулина Анна','Бильсон Анастасия','Пинчук Валерия','Дёмена Анастасия',
-      'Картошкина Мария','Борисова София','Шведова Ангелина','Шилкина Ксения','Борисова Дана','Евсеева Анастасия',
-    ]},
-    {id:'duet', name:'Duet', short:'Duet', type:'solo', block:1, teams:[
-      '@Dasha_dancelove','Две здесь','ВОСВОЯСИ','SOAK','Duetto',
-      'ПО ИНТЕРЕСАМ','@vkravtsova1','Flame Twix','@mrg_pavlova','POLIKRI','дуэт Х.О',
-    ]},
-    {id:'solo_frame', name:'Solo Frame Up', short:'Frame Up', type:'solo', block:1, teams:[
-      'Лебедева Анастасия','Мирошникова Юлия','Cherrnuha','Пашкова Алиса','Цвиркун Дарья',
-      'Кукава Эльвира','Новикова Полина','Климова Валерия','Литвякова Анна','Лихачёва Александра',
-      'Захарова Наталья','Дубовицкая Софья','Еремеева Ирина','Лященко Валерия','Алина Gloom',
-      'Илана Исакова','Некрасова Марина','Костина Юлия','Котюх Александра','Цимбалюк Полина',
-      'Корниенко Анастасия','Рыжонкова Любовь',
-    ]},
-    {id:'solo_pro', name:'Solo Pro', short:'Solo Pro', type:'solo', block:1, teams:[
-      'Мельникова Дарья','Ситора','Ловякина Елизавета','Клок Маргарита','Красова Дарья',
-      'Яковлева Алина','Полякова Александра','Соколикова Александра','Осетрова Татьяна','Абрамова Александра',
-      'Фатеева Анастасия','Корсикова Анастасия','Парыгина Алёна','Чистякова Ксения','Зуб Евгения',
-      'Баранова Елизавета','Приставка Екатерина','Милая Анастасия','Клёнова Полина','Сухова София',
-      'Демко Юлия','Мощенко Александра','Астанина Ева','Зарубкина Дарья','Глебова Юлия',
-      'Лотник Ксения','Молочко Татьяна','Болотникова Юлия','Син Инна','Трубникова Кристина',
-      'Корчагина Люсьена','Перчак Диана','Ахмякова Анастасия','Удельнов Василий','Казакова Алина',
-      'Кислюк Александра','Прибылова Елизавета','Тимирбаева Диана','Несмиянова Юля','Анищик Лада',
-      'Падей Екатерина','Пылаева Алена','Черных Анастасия','Самсонова Виктория','Шитикова Виктория',
-      'Сульковская Ирина','Мацак Кристина','Быстрова Арина','Зыбина Елизавета','Керова Ксения',
-      'Сидякина Анна','Корниенко Анастасия','Морозова Дарья','Букина Арина','Киселёва Мария',
-      'Смирнова Екатерина','Цыганкова Аня',
-    ]},
-    {id:'mini_crew', name:'Mini Crew', short:'Mini Crew', type:'crew', block:1, teams:[
-      'Nornir','Цукерочки','AVA','Bullet','LAVDO',
-      'Каблучный сбор','MAIDENS','dolls','DONNA','@vkravtsova1',
-      'LYNX','Dich Art Group','ViVibes','VI','NG','KITCH',
-    ]},
+    {id:'solo_beg', name:'Solo Beginners', short:'Solo Beg', type:'solo', block:1, teams:['Портнова Анна','Меньших Дарья','Кораблина Стефания','Гончарова Дарья','Гаспарян Анжела','Давыдова Эвелина','Бутко Мария','Улыбина Татьяна','Бернадская Анна','Терещенко София','Еремеева Маргарита','Кузóра Карина','Наимова Виктория','Шахова София','Грабежева Жанна','Бойкова Юлия','Колесникова Ева','Павлова Маргарита','Ажнина Светлана','Лаптева Варвара','Окутина Мария','Гайфутдинова Валерия','Зотова Валерия','Григорьева Алиса','Мельникова Кристина','Бондарева Дарья','Мартынова Кристина','Лавриненко Екатерина','Афанасьева Екатерина','Нафикова Алина','Дмитриева Ирина','Маркитан Анастасия','Ким Александра','Казеннова Юлия','Бондарь Анна','Кугаевская Елизавета','Никулина Анна','Бильсон Анастасия','Пинчук Валерия','Дёмена Анастасия','Картошкина Мария','Борисова София','Шведова Ангелина','Шилкина Ксения','Борисова Дана','Евсеева Анастасия']},
+    {id:'duet',       name:'Duet',          short:'Duet',     type:'solo', block:1, teams:['@Dasha_dancelove','Две здесь','ВОСВОЯСИ','SOAK','Duetto','ПО ИНТЕРЕСАМ','@vkravtsova1','Flame Twix','@mrg_pavlova','POLIKRI','дуэт Х.О']},
+    {id:'solo_frame', name:'Solo Frame Up', short:'Frame Up', type:'solo', block:1, teams:['Лебедева Анастасия','Мирошникова Юлия','Cherrnuha','Пашкова Алиса','Цвиркун Дарья','Кукава Эльвира','Новикова Полина','Климова Валерия','Литвякова Анна','Лихачёва Александра','Захарова Наталья','Дубовицкая Софья','Еремеева Ирина','Лященко Валерия','Алина Gloom','Илана Исакова','Некрасова Марина','Костина Юлия','Котюх Александра','Цимбалюк Полина','Корниенко Анастасия','Рыжонкова Любовь']},
+    {id:'solo_pro',   name:'Solo Pro',      short:'Solo Pro', type:'solo', block:1, teams:['Мельникова Дарья','Ситора','Ловякина Елизавета','Клок Маргарита','Красова Дарья','Яковлева Алина','Полякова Александра','Соколикова Александра','Осетрова Татьяна','Абрамова Александра','Фатеева Анастасия','Корсикова Анастасия','Парыгина Алёна','Чистякова Ксения','Зуб Евгения','Баранова Елизавета','Приставка Екатерина','Милая Анастасия','Клёнова Полина','Сухова София','Демко Юлия','Мощенко Александра','Астанина Ева','Зарубкина Дарья','Глебова Юлия','Лотник Ксения','Молочко Татьяна','Болотникова Юлия','Син Инна','Трубникова Кристина','Корчагина Люсьена','Перчак Диана','Ахмякова Анастасия','Удельнов Василий','Казакова Алина','Кислюк Александра','Прибылова Елизавета','Тимирбаева Диана','Несмиянова Юля','Анищик Лада','Падей Екатерина','Пылаева Алена','Черных Анастасия','Самсонова Виктория','Шитикова Виктория','Сульковская Ирина','Мацак Кристина','Быстрова Арина','Зыбина Елизавета','Керова Ксения','Сидякина Анна','Корниенко Анастасия','Морозова Дарья','Букина Арина','Киселёва Мария','Смирнова Екатерина','Цыганкова Аня']},
+    {id:'mini_crew',  name:'Mini Crew',     short:'Mini Crew',type:'crew', block:1, teams:['Nornir','Цукерочки','AVA','Bullet','LAVDO','Каблучный сбор','MAIDENS','dolls','DONNA','@vkravtsova1','LYNX','Dich Art Group','ViVibes','VI','NG','KITCH']},
   ],
 };
 
-// ══ HELPERS ══
-function getCrit(nom){ return nom.type==='crew' ? C.critCrew : C.critSolo; }
-function wt(s,nom){ return getCrit(nom).reduce((a,c)=>a+(parseFloat(s[c.k])||0)*c.w, 0); }
+function getCrit(nom){return nom.type==='crew'?C.critCrew:C.critSolo;}
+function wt(s,nom){return getCrit(nom).reduce((a,c)=>a+(parseFloat(s[c.k])||0)*c.w,0);}
 
-// ══ STORAGE — только реальные данные из Firebase ══
-function loadSc(){  return window._fbScores || {}; }
-function loadSub(){ return window._fbSub    || {}; }
-function loadPub(){ return window._fbPub    || {}; }
-function savePub(p){ db.ref('published').set(p); }
-
-
-// ══ STATE ══
-let curNom=0, admOpen=false;
-
-// ══ COMPUTE ══
 function compute(nomIdx){
   const nom=C.noms[nomIdx];
-  const sc=loadSc(), sub=loadSub();
+  const sc=window._sc||{}, sub=window._sub||{};
   const bj=C.judges.map((j,ji)=>({...j,ji})).filter(j=>j.block===nom.block);
   const jDone=bj.map(j=>sub?.[j.ji]?.[nom.id]===true);
   const crit=getCrit(nom);
-
   const teams=nom.teams.map((team,ti)=>{
     const jScores=[];
     bj.forEach((j,bi)=>{
@@ -342,11 +409,11 @@ function compute(nomIdx){
       const s=sc?.[j.ji]?.[nom.id]?.[ti];
       if(s)jScores.push({w:wt(s,nom),raw:s});
     });
-    const avg=jScores.length ? jScores.reduce((a,b)=>a+b.w,0)/jScores.length : null;
+    const avg=jScores.length?jScores.reduce((a,b)=>a+b.w,0)/jScores.length:null;
     const critAvg={};
     crit.forEach(c=>{
       const vs=jScores.map(js=>parseFloat(js.raw[c.k])||0);
-      critAvg[c.k]=vs.length ? vs.reduce((a,b)=>a+b,0)/vs.length : null;
+      critAvg[c.k]=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
     });
     const cmts=bj.map((j,bi)=>({
       judge:j.name,
@@ -355,15 +422,15 @@ function compute(nomIdx){
     }));
     return{team,ti,avg,critAvg,cmts};
   });
-
   const sorted=[...teams].filter(t=>t.avg!==null).sort((a,b)=>b.avg-a.avg);
   const unsorted=teams.filter(t=>t.avg===null);
   return{sorted:[...sorted,...unsorted],bj,jDone};
 }
 
-// ══ TABS ══
+let curNom=0, admOpen=false;
+
 function renderTabs(){
-  const t=document.getElementById('tabs'); t.innerHTML='';
+  const t=document.getElementById('tabs');t.innerHTML='';
   C.noms.forEach((nom,i)=>{
     const btn=document.createElement('div');
     btn.className='tab'+(i===curNom?' act':'');
@@ -373,70 +440,66 @@ function renderTabs(){
   });
 }
 
-// ══ MAIN RENDER ══
 function renderAll(){
   const nom=C.noms[curNom];
-  const pub=loadPub();
-  const {sorted,bj,jDone}=compute(curNom);
+  const pub=window._pub||{};
+  const{sorted,bj,jDone}=compute(curNom);
   const isPublished=pub[nom.id]===true;
-  const allDone=jDone.every(Boolean);
   const crit=getCrit(nom);
 
   renderTabs();
   document.getElementById('ntitle').textContent=nom.name;
-
-  // judge pills
   document.getElementById('jpills').innerHTML=bj.map((j,bi)=>`
     <div class="pill ${jDone[bi]?'dn':'wt'}">
       <span class="pdot"></span>${j.name.split(' ')[0]}
     </div>`).join('');
-
-  // criteria info
   document.getElementById('critInfo').innerHTML=crit.map(c=>
     `<div class="cb">${c.l} <span>${Math.round(c.w*100)}%</span></div>`
   ).join('');
 
-  // admin panel
+  // Admin
   document.getElementById('admrows').innerHTML=bj.map((j,bi)=>`
     <div class="arow ${jDone[bi]?'dn':'wt'}">
       <span class="an"><span class="adot"></span>${j.name}</span>
       <span class="ast">${jDone[bi]?'✓ сдал':'ожидаем'}</span>
     </div>`).join('');
   const pb=document.getElementById('pbtn');
-  pb.textContent = isPublished ? '🔄 Переопубликовать' : 'Опубликовать результаты';
-  pb.className = 'pbtn';
-  pb.onclick = publish;
+  pb.textContent=isPublished?'🔄 Переопубликовать':'Опубликовать результаты';
+  pb.className='pbtn'; pb.onclick=publish;
 
   const ct=document.getElementById('content');
-
   if(!isPublished){
     ct.innerHTML=`<div class="pend">
-      <span class="pend-ico">⏳</span>
+      <div class="pend-ico">&#9201;</div>
       <span class="pend-t">Ожидаем публикации</span>
-      <span class="pend-s">Нажмите «Опубликовать результаты» в панели ⚙<br>Сдали оценки: ${jDone.filter(Boolean).length} из ${bj.length}</span>
+      <span class="pend-s">Нажмите «Опубликовать результаты» в панели &#9881;<br>
+      Сдали оценки: ${jDone.filter(Boolean).length} из ${bj.length}</span>
     </div>`;
     return;
   }
 
-  // grid columns: # name + N criteria + total
   const cols=`48px 1fr ${crit.map(()=>'76px').join(' ')} 90px`;
-
   let html='';
 
   // PODIUM
-  const medals=[{cls:'g',emo:'🥇',lbl:'1 место'},{cls:'s',emo:'🥈',lbl:'2 место'},{cls:'b',emo:'🥉',lbl:'3 место'}];
-  html+=`<div class="podium">`;
-  medals.forEach((m,i)=>{
-    const t=sorted[i];
-    if(!t){html+=`<div class="pc ${m.cls}"><span class="pmed">${m.emo}</span><span class="pplace">${m.lbl}</span><div class="pname">—</div><div class="pbar"></div></div>`;return;}
-    const click=i===0?`onclick="showW('${t.team.replace(/'/g,"\\'")}','${t.avg.toFixed(3)}')"`:'' ;
-    html+=`<div class="pc ${m.cls}" ${click}>
-      <span class="pmed">${m.emo}</span>
-      <span class="pplace">${m.lbl}</span>
-      <div class="pname">${t.team}</div>
-      <div class="pscore">${t.avg.toFixed(3)}</div>
-      <span class="plbl">итоговый балл</span>
-      <div class="pbar"></div>
+  const order=[1,0,2]; // silver, gold, bronze — gold in middle
+  html+=`<div class="podium-wrap">`;
+  order.forEach(rank=>{
+    const t=sorted[rank];
+    const cls=['first','second','third'][rank];
+    const label=['1 место','2 место','3 место'][rank];
+    const num=[1,2,3][rank];
+    const isEmpty=!t;
+    const click=rank===0&&t?`onclick="showW('${(t.team||'').replace(/'/g,"\\'")}','${t.avg?t.avg.toFixed(3):''}')"`:'' ;
+    html+=`<div class="pod ${cls}">
+      <div class="pod-card" ${click} style="${rank===0?'cursor:pointer':''}">
+        <div class="place-badge">${num}</div>
+        <div class="pod-name">${isEmpty?'—':t.team}</div>
+        <div class="pod-score">${isEmpty||t.avg===null?'—':t.avg.toFixed(3)}</div>
+        <span class="pod-lbl">итоговый балл</span>
+        <div class="pod-glow"></div>
+      </div>
+      <div class="platform"><div class="plat-block">${label}</div></div>
     </div>`;
   });
   html+=`</div>`;
@@ -453,9 +516,9 @@ function renderAll(){
   sorted.forEach((t,rank)=>{
     const r=rank+1;
     const hasCmt=t.cmts.some(c=>c.text&&c.done);
-    html+=`<div class="trow${r<=3?' t3':''}" style="grid-template-columns:${cols};animation-delay:${rank*.04}s">
+    html+=`<div class="trow${r<=3?' t3':''}" style="grid-template-columns:${cols}">
       <div class="rnk${r<=3?' r'+r:''}">${r}</div>
-      <div><div class="tn">${t.team}</div>${hasCmt?'<div class="tc">💬 комментарии</div>':''}</div>
+      <div><div class="tn">${t.team}</div>${hasCmt?'<div class="tc">комментарии судей</div>':''}</div>
       ${crit.map(c=>`<div class="sc">${t.critAvg[c.k]!=null?t.critAvg[c.k].toFixed(2):'—'}</div>`).join('')}
       <div class="stot${r<=3?' r'+r:''}">${t.avg!=null?t.avg.toFixed(3):'—'}</div>
     </div>`;
@@ -480,34 +543,24 @@ function renderAll(){
   }
 
   ct.innerHTML=html;
-  document.getElementById('upd').textContent='обновлено '+new Date().toLocaleTimeString('ru');
 }
 
-// ══ ACTIONS ══
 function publish(){
-  // Читаем текущее состояние из Firebase напрямую
-  const currentPub = window._fbPub || {};
-  currentPub[C.noms[curNom].id] = true;
-  db.ref('published').set(currentPub);
-  // Firebase listener сам вызовет renderAll()
+  const pub=window._pub||{};
+  pub[C.noms[curNom].id]=true;
+  db.ref('published').set(pub);
 }
-
 function clearAll(){
-  const pass = prompt('Введите админский пароль:');
-  if(pass !== 'law2026') { alert('Неверный пароль'); return; }
-  if(!confirm('Очистить ВСЕ данные? Оценки всех судей будут удалены.')) return;
+  const pass=prompt('Админский пароль:');
+  if(pass!=='law2026'){alert('Неверный пароль');return;}
+  if(!confirm('Очистить ВСЕ данные?'))return;
   db.ref('scores').set(null);
   db.ref('submitted').set(null);
   db.ref('published').set(null);
-  window._fbScores = {};
-  window._fbSub = {};
-  window._fbPub = {};
+  window._sc={}; window._sub={}; window._pub={};
   renderAll();
-  alert('Данные очищены!');
 }
-function toggleAdm(){
-  admOpen=!admOpen; document.getElementById('adm').classList.toggle('vis',admOpen);
-}
+function toggleAdm(){admOpen=!admOpen;document.getElementById('adm').classList.toggle('vis',admOpen);}
 function toggleFS(){
   if(!document.fullscreenElement)document.documentElement.requestFullscreen();
   else document.exitFullscreen();
@@ -517,7 +570,7 @@ function showW(name,score){
   document.getElementById('wsc').textContent=score+' баллов';
   document.getElementById('wov').classList.add('vis');
 }
-function closeW(){ document.getElementById('wov').classList.remove('vis'); }
+function closeW(){document.getElementById('wov').classList.remove('vis');}
 
 renderAll();
 setInterval(renderAll,15000);
