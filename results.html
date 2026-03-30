@@ -225,12 +225,11 @@
   </div>
 </div>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-const firebaseConfig = {
+<!-- Firebase compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
   apiKey: "AIzaSyA1xkiAfHRKVCQDCmatrWLolEphtgwXOd0",
   authDomain: "kulakovalaw.firebaseapp.com",
   databaseURL: "https://kulakovalaw-default-rtdb.europe-west1.firebasedatabase.app",
@@ -238,19 +237,13 @@ const firebaseConfig = {
   storageBucket: "kulakovalaw.firebasestorage.app",
   messagingSenderId: "569728367844",
   appId: "1:569728367844:web:6c888f00d010b5fde2c0f1"
-};
+});
+const db = firebase.database();
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// Слушаем изменения в реальном времени — страница обновляется автоматически
-onValue(ref(db,'scores'),    (snap)=>{ window._fbScores = snap.val()||null; renderAll(); });
-onValue(ref(db,'submitted'), (snap)=>{ window._fbSub    = snap.val()||null; renderAll(); });
-onValue(ref(db,'published'), (snap)=>{ window._fbPub    = snap.val()||null; renderAll(); });
-
-window._fbDb  = db;
-window._fbRef = ref;
-window._fbSet = set;
+// Слушаем изменения в реальном времени
+db.ref('scores').on('value',    snap=>{ window._fbScores = snap.val()||{}; renderAll(); });
+db.ref('submitted').on('value', snap=>{ window._fbSub    = snap.val()||{}; renderAll(); });
+db.ref('published').on('value', snap=>{ window._fbPub    = snap.val()||{}; renderAll(); });
 </script>
 
 <script>
@@ -327,12 +320,8 @@ function wt(s,nom){ return getCrit(nom).reduce((a,c)=>a+(parseFloat(s[c.k])||0)*
 function loadSc(){  return window._fbScores || {}; }
 function loadSub(){ return window._fbSub    || {}; }
 function loadPub(){ return window._fbPub    || {}; }
-function savePub(p){
-  if(window._fbDb) window._fbSet(window._fbRef(window._fbDb,'published'), p);
-}
-function savePub(p){
-  if(window._fbDb) window._fbSet(window._fbRef(window._fbDb,'published'), p);
-}
+function savePub(p){ db.ref('published').set(p); }
+
 
 // ══ STATE ══
 let curNom=0, admOpen=false;
@@ -413,19 +402,17 @@ function renderAll(){
       <span class="ast">${jDone[bi]?'✓ сдал':'ожидаем'}</span>
     </div>`).join('');
   const pb=document.getElementById('pbtn');
-  if(isPublished){
-    pb.textContent='✓ Опубликовано'; pb.className='pbtn done'; pb.onclick=null;
-  } else {
-    pb.textContent='Опубликовать результаты'; pb.className='pbtn'; pb.onclick=publish;
-  }
+  pb.textContent = isPublished ? '🔄 Переопубликовать' : 'Опубликовать результаты';
+  pb.className = 'pbtn';
+  pb.onclick = publish;
 
   const ct=document.getElementById('content');
 
-  if(!isPublished||!allDone){
+  if(!isPublished){
     ct.innerHTML=`<div class="pend">
       <span class="pend-ico">⏳</span>
-      <span class="pend-t">${allDone&&!isPublished?'Ожидаем публикации':'Ожидаем оценки судей'}</span>
-      <span class="pend-s">Сдали: ${jDone.filter(Boolean).length} из ${bj.length}</span>
+      <span class="pend-t">Ожидаем публикации</span>
+      <span class="pend-s">Нажмите «Опубликовать результаты» в панели ⚙<br>Сдали оценки: ${jDone.filter(Boolean).length} из ${bj.length}</span>
     </div>`;
     return;
   }
