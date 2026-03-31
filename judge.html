@@ -593,24 +593,15 @@ function rNom(){
           ${crit.map(c=>`
             <div class="crit">
               <div class="crith"><span class="critn">${c.l}</span><span class="critw">${Math.round(c.w*100)}%</span></div>
-              <div class="slider-val-row">
+              <div style="text-align:center!important;padding:8px 0 4px!important">
                 <span class="slider-val-big ${cc(s[c.k])}" id="sv_${tIdx}_${c.k}">${parseFloat(s[c.k]||1).toFixed(1)}</span>
-                <div class="nwrap" style="width:80px">
-                  <input type="number" class="ninp ${cc(s[c.k])}" id="ni_${tIdx}_${c.k}"
-                    min="1" max="10" step="0.1" value="${parseFloat(s[c.k]||1).toFixed(1)}"
-                    oninput="oi(${tIdx},'${c.k}',this.value)"
-                    onblur="ob(${tIdx},'${c.k}',this.value)">
-                  <span class="nmx">/10</span>
-                </div>
+                <span style="font-size:14px!important;color:var(--mt)!important;margin-left:4px!important">/10</span>
               </div>
               <input type="range" class="ipad-slider" id="sl_${tIdx}_${c.k}"
                 min="1" max="10" step="0.1"
                 value="${parseFloat(s[c.k]||1)}"
                 oninput="onSlider(${tIdx},'${c.k}',this.value)">
               <div class="slider-range-lbl"><span>1</span><span>5</span><span>10</span></div>
-              <div class="qrow">
-                ${[1,2,3,4,5,6,7,8,9,10].map(v=>`<div class="qb" onclick="qs(${tIdx},'${c.k}',${v})">${v}</div>`).join('')}
-              </div>
             </div>`).join('')}
         </div>
         <div class="totrow">
@@ -660,21 +651,18 @@ function tog(t){document.getElementById('c'+t).classList.toggle('open');}
 
 function onSlider(t,k,val){
   const v=Math.round(parseFloat(val)*10)/10;
-  const ni=document.getElementById('ni_'+t+'_'+k);
-  if(ni){ni.value=v.toFixed(1);ni.className='ninp '+cc(v);}
+  // обновляем большую цифру
   const sv=document.getElementById('sv_'+t+'_'+k);
   if(sv){sv.textContent=v.toFixed(1);sv.className='slider-val-big '+cc(v);}
-  // update slider gradient
+  // градиент слайдера
   const sl=document.getElementById('sl_'+t+'_'+k);
   if(sl){const pct=((v-1)/9)*100;sl.style.background=`linear-gradient(to right,var(--a) ${pct}%,var(--bd) ${pct}%)`;}
   oi(t,k,v);
 }
 function stp(t,k,d){
-  const inp=document.getElementById('ni_'+t+'_'+k);
-  let v=parseFloat(inp.value)||1;
-  v=Math.min(10,Math.max(1,Math.round((v+d)*10)/10));
-  inp.value=v.toFixed(1);
   const sl=document.getElementById('sl_'+t+'_'+k);
+  let v=parseFloat(sl?.value)||1;
+  v=Math.min(10,Math.max(1,Math.round((v+d)*10)/10));
   if(sl){sl.value=v;const pct=((v-1)/9)*100;sl.style.background=`linear-gradient(to right,var(--a) ${pct}%,var(--bd) ${pct}%)`;}
   oi(t,k,v);
 }
@@ -682,12 +670,10 @@ function oi(t,k,raw){
   const v=parseFloat(raw);if(isNaN(v))return;
   const cl=Math.min(10,Math.max(1,v));
   ss(ji,C.noms[ni].id,t,k,cl);
-  const inp=document.getElementById('ni_'+t+'_'+k);
-  if(inp)inp.className='ninp '+cc(cl);
-  // sync big value display
+  // обновляем большую цифру
   const sv=document.getElementById('sv_'+t+'_'+k);
   if(sv){sv.textContent=cl.toFixed(1);sv.className='slider-val-big '+cc(cl);}
-  // sync slider gradient
+  // градиент слайдера
   const sl=document.getElementById('sl_'+t+'_'+k);
   if(sl){sl.value=cl;const pct=((cl-1)/9)*100;sl.style.background=`linear-gradient(to right,var(--a) ${pct}%,var(--bd) ${pct}%)`;}
   document.getElementById('tv'+t).textContent=wt(gs(ji,C.noms[ni].id,t),ni).toFixed(3);
