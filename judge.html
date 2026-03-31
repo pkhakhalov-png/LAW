@@ -203,6 +203,13 @@
 #L .slider-val-big.lo{color:var(--err)!important;}
 #L .slider-range-lbl{display:flex!important;justify-content:space-between!important;font-size:10px!important;color:var(--mt)!important;margin-bottom:8px!important;}
 
+/* Полоса заполнения */
+#L .fill-bar{height:4px!important;background:var(--bd)!important;border-radius:2px!important;margin-top:10px!important;overflow:hidden!important;}
+#L .fill-bar-inner{height:100%!important;border-radius:2px!important;transition:width .25s ease,background .2s!important;}
+#L .fill-bar-inner.hi{background:var(--ok)!important;}
+#L .fill-bar-inner.md{background:var(--a)!important;}
+#L .fill-bar-inner.lo{background:var(--err)!important;}
+
 /* Быстрые кнопки */
 #L .qrow{display:flex!important;flex-wrap:wrap!important;gap:4px!important;}
 #L .qb{background:#0a0a0f!important;border:1px solid var(--bd)!important;color:var(--mt)!important;
@@ -593,15 +600,18 @@ function rNom(){
           ${crit.map(c=>`
             <div class="crit">
               <div class="crith"><span class="critn">${c.l}</span><span class="critw">${Math.round(c.w*100)}%</span></div>
-              <div style="text-align:center!important;padding:8px 0 4px!important">
-                <span class="slider-val-big ${cc(s[c.k])}" id="sv_${tIdx}_${c.k}">${parseFloat(s[c.k]||1).toFixed(1)}</span>
-                <span style="font-size:14px!important;color:var(--mt)!important;margin-left:4px!important">/10</span>
+              <div class="sctrl">
+                <div class="stp" onclick="stp(${tIdx},'${c.k}',-0.1)">−</div>
+                <div class="nwrap">
+                  <input type="number" class="ninp ${cc(s[c.k])}" id="ni_${tIdx}_${c.k}"
+                    min="1" max="10" step="0.1" value="${parseFloat(s[c.k]||1).toFixed(1)}"
+                    oninput="oi(${tIdx},'${c.k}',this.value)"
+                    onblur="ob(${tIdx},'${c.k}',this.value)">
+                  <span class="nmx">/10</span>
+                </div>
+                <div class="stp" onclick="stp(${tIdx},'${c.k}',+0.1)">+</div>
               </div>
-              <input type="range" class="ipad-slider" id="sl_${tIdx}_${c.k}"
-                min="1" max="10" step="0.1"
-                value="${parseFloat(s[c.k]||1)}"
-                oninput="onSlider(${tIdx},'${c.k}',this.value)">
-              <div class="slider-range-lbl"><span>1</span><span>5</span><span>10</span></div>
+              <div class="fill-bar"><div class="fill-bar-inner ${cc(s[c.k])}" id="sv_${tIdx}_${c.k}" style="width:${((parseFloat(s[c.k]||1)-1)/9*100).toFixed(1)}%"></div></div>
             </div>`).join('')}
         </div>
         <div class="totrow">
@@ -660,22 +670,21 @@ function onSlider(t,k,val){
   oi(t,k,v);
 }
 function stp(t,k,d){
-  const sl=document.getElementById('sl_'+t+'_'+k);
-  let v=parseFloat(sl?.value)||1;
+  const inp=document.getElementById('ni_'+t+'_'+k);
+  let v=parseFloat(inp?.value)||1;
   v=Math.min(10,Math.max(1,Math.round((v+d)*10)/10));
-  if(sl){sl.value=v;const pct=((v-1)/9)*100;sl.style.background=`linear-gradient(to right,var(--a) ${pct}%,var(--bd) ${pct}%)`;}
+  if(inp)inp.value=v.toFixed(1);
   oi(t,k,v);
 }
 function oi(t,k,raw){
   const v=parseFloat(raw);if(isNaN(v))return;
   const cl=Math.min(10,Math.max(1,v));
   ss(ji,C.noms[ni].id,t,k,cl);
-  // обновляем большую цифру
-  const sv=document.getElementById('sv_'+t+'_'+k);
-  if(sv){sv.textContent=cl.toFixed(1);sv.className='slider-val-big '+cc(cl);}
-  // градиент слайдера
-  const sl=document.getElementById('sl_'+t+'_'+k);
-  if(sl){sl.value=cl;const pct=((cl-1)/9)*100;sl.style.background=`linear-gradient(to right,var(--a) ${pct}%,var(--bd) ${pct}%)`;}
+  const inp=document.getElementById('ni_'+t+'_'+k);
+  if(inp)inp.className='ninp '+cc(cl);
+  // полоса заполнения
+  const bar=document.getElementById('sv_'+t+'_'+k);
+  if(bar){bar.style.width=((cl-1)/9*100).toFixed(1)+'%';bar.className='fill-bar-inner '+cc(cl);}
   document.getElementById('tv'+t).textContent=wt(gs(ji,C.noms[ni].id,t),ni).toFixed(3);
   document.getElementById('sb'+t).className='savbtn';
   document.getElementById('sb'+t).textContent='💾 Сохранить';
