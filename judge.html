@@ -214,12 +214,9 @@
 #L .score-field-wrap:active{border-color:var(--a)!important;}
 #L .score-fill{
   position:absolute!important;inset:0!important;right:auto!important;
-  height:100%!important;transition:width .15s ease,background .2s!important;
-  opacity:.35!important;
+  height:100%!important;transition:width .12s ease,background .12s ease!important;
+  opacity:.45!important;
 }
-#L .score-fill.hi{background:var(--ok)!important;}
-#L .score-fill.md{background:var(--a)!important;}
-#L .score-fill.lo{background:var(--err)!important;}
 #L .score-num{
   position:absolute!important;inset:0!important;
   display:flex!important;align-items:center!important;justify-content:center!important;
@@ -623,18 +620,23 @@ function rNom(){
           ${crit.map(c=>{
             const val=parseFloat(s[c.k]||1);
             const pct=((val-1)/9*100).toFixed(1);
-            const col=cc(val);
+            const t0=(val-1)/9;
+            let r,g,b;
+            if(t0<0.5){const f=t0*2;r=Math.round(192+f*(230-192));g=Math.round(57+f*(126-57));b=Math.round(43+f*(34-43));}
+            else{const f=(t0-0.5)*2;r=Math.round(230+f*(0-230));g=Math.round(126+f*(230-126));b=Math.round(34+f*(118-34));}
+            const fillColor=`rgb(${r},${g},${b})`;
             return`
             <div class="crit">
               <div class="crith"><span class="critn">${c.l}</span><span class="critw">${Math.round(c.w*100)}%</span></div>
               <div class="sctrl">
                 <div class="stp" onclick="stp(${tIdx},'${c.k}',-0.1)">−</div>
                 <div class="score-field-wrap" id="fw_${tIdx}_${c.k}"
+                  style="border-color:rgba(${r},${g},${b},.5)!important"
                   ontouchstart="sfTouch(event,${tIdx},'${c.k}')"
                   ontouchmove="sfTouch(event,${tIdx},'${c.k}')"
                   onmousedown="sfMouse(event,${tIdx},'${c.k}')"
                   onmousemove="sfMouse(event,${tIdx},'${c.k}')">
-                  <div class="score-fill ${col}" id="sf_${tIdx}_${c.k}" style="width:${pct}%"></div>
+                  <div class="score-fill" id="sf_${tIdx}_${c.k}" style="width:${pct}%;background:${fillColor}"></div>
                   <span class="score-num" id="sn_${tIdx}_${c.k}">${val.toFixed(1)}</span>
                   <span class="score-max">/10</span>
                 </div>
@@ -710,14 +712,33 @@ function oi(t,k,raw){
   const cl=Math.min(10,Math.max(1,Math.round(v*10)/10));
   ss(ji,C.noms[ni].id,t,k,cl);
   const pct=((cl-1)/9*100).toFixed(1);
-  const col=cc(cl);
+
+  // Цвет: 1=тёмно-красный → 5=оранжевый → 8=жёлто-зелёный → 10=ярко-зелёный
+  const t0=(cl-1)/9; // 0..1
+  let r,g,b;
+  if(t0<0.5){
+    // 1→5: красный #c0392b → оранжевый #e67e22
+    const f=t0*2;
+    r=Math.round(192+f*(230-192));
+    g=Math.round(57+f*(126-57));
+    b=Math.round(43+f*(34-43));
+  } else {
+    // 5→10: оранжевый → ярко-зелёный #00e676
+    const f=(t0-0.5)*2;
+    r=Math.round(230+f*(0-230));
+    g=Math.round(126+f*(230-126));
+    b=Math.round(34+f*(118-34));
+  }
+  const fillColor=`rgb(${r},${g},${b})`;
+
   const sf=document.getElementById('sf_'+t+'_'+k);
-  if(sf){sf.style.width=pct+'%';sf.className='score-fill '+col;}
+  if(sf){sf.style.width=pct+'%';sf.style.background=fillColor;sf.style.opacity='.45';}
   const sn=document.getElementById('sn_'+t+'_'+k);
   if(sn)sn.textContent=cl.toFixed(1);
-  // border color на обёртке
+  // border color
   const fw=document.getElementById('fw_'+t+'_'+k);
-  if(fw) fw.style.borderColor=col==='hi'?'rgba(74,222,128,.5)':col==='lo'?'rgba(248,113,113,.4)':'var(--bd)';
+  if(fw)fw.style.borderColor=`rgba(${r},${g},${b},.5)`;
+
   document.getElementById('tv'+t).textContent=wt(gs(ji,C.noms[ni].id,t),ni).toFixed(3);
   document.getElementById('sb'+t).className='savbtn';
   document.getElementById('sb'+t).textContent='💾 Сохранить';
