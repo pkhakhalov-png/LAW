@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAW — Админ панель</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0a0a0f;color:#f0f0f5;font-family:'Manrope',sans-serif;min-height:100vh;}
+:root{
+  --a:#e03535;--s:#13131c;--s2:#1c1c2a;--bd:#2a2a3d;--mt:#6b6b8a;--ok:#4ade80;--err:#f87171;
+}
+
+/* LOGIN */
+.login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0a0f;z-index:100;transition:opacity .3s,visibility .3s;}
+.login.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.lbox{background:var(--s);border:1px solid var(--bd);border-radius:16px;padding:36px 28px;width:100%;max-width:360px;text-align:center;position:relative;overflow:hidden;}
+.lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--a),#ff6b35);}
+.logo{display:block;font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:6px;color:var(--a);line-height:1;margin-bottom:4px;}
+.lsub{display:block;font-size:10px;color:var(--mt);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;}
+.pinlbl{display:block;font-size:10px;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.pin-inp{display:block;width:100%;background:#0a0a0f;border:2px solid var(--bd);border-radius:10px;color:#f0f0f5;font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;padding:12px;outline:none;letter-spacing:6px;margin-bottom:16px;transition:border-color .2s;}
+.pin-inp:focus{border-color:var(--a);}
+.pin-inp::placeholder{color:var(--bd);letter-spacing:2px;}
+.lerr{display:block;color:var(--err);font-size:12px;min-height:18px;margin-bottom:10px;}
+.lbtn{display:block;width:100%;background:var(--a);color:#0a0a0f;border-radius:10px;height:46px;line-height:46px;font-size:14px;font-weight:800;cursor:pointer;text-align:center;transition:background .2s,opacity .2s;}
+.lbtn:hover{background:#c02020;}
+
+/* APP */
+.app{display:none;}
+.app.vis{display:block;}
+
+.header{background:rgba(10,10,15,.96);border-bottom:1px solid var(--bd);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.hlogo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;color:var(--a);}
+.hbadge{background:rgba(224,53,53,.12);border:1px solid rgba(224,53,53,.3);color:var(--a);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.hout{border:1px solid var(--bd);color:var(--mt);padding:5px 14px;border-radius:8px;font-size:12px;cursor:pointer;transition:all .2s;}
+.hout:hover{border-color:var(--err);color:var(--err);}
+
+.main{max-width:900px;margin:0 auto;padding:32px 20px;}
+
+/* Nomination tabs */
+.nom-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;}
+.ntab{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--mt);transition:all .2s;}
+.ntab:hover{border-color:var(--a);color:#f0f0f5;}
+.ntab.act{border-color:var(--a);color:var(--a);background:rgba(224,53,53,.08);}
+
+/* Section */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;}
+.sec-cnt{font-size:12px;color:var(--mt);background:var(--s2);border:1px solid var(--bd);padding:4px 12px;border-radius:20px;}
+
+/* Participant list */
+.plist{background:var(--s);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.prow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bd);transition:background .15s;}
+.prow:last-child{border-bottom:none;}
+.prow:hover{background:rgba(255,255,255,.02);}
+.pnum{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--bd);min-width:30px;}
+.pname-inp{flex:1;background:transparent;border:none;border-bottom:1px solid transparent;color:#f0f0f5;font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;outline:none;padding:4px 0;transition:border-color .2s;}
+.pname-inp:focus{border-bottom-color:var(--a);}
+.pdel{width:30px;height:30px;border:1px solid var(--bd);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mt);font-size:14px;transition:all .2s;flex-shrink:0;}
+.pdel:hover{border-color:var(--err);color:var(--err);}
+
+/* Add button */
+.add-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:1px dashed var(--bd);border-radius:14px;cursor:pointer;color:var(--mt);font-size:13px;font-weight:600;transition:all .2s;background:transparent;}
+.add-btn:hover{border-color:var(--a);color:var(--a);}
+
+/* Save bar */
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:var(--s);border-top:1px solid var(--bd);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:50;}
+.save-info{font-size:13px;color:var(--mt);}
+.save-info b{color:#f0f0f5;}
+.sbtn{background:var(--a);color:#0a0a0f;border:none;border-radius:10px;padding:12px 32px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;}
+.sbtn:hover{background:#c02020;}
+.sbtn.saved{background:var(--ok);color:#0a0a0f;}
+.cbtn{background:var(--s2);color:var(--mt);border:1px solid var(--bd);border-radius:10px;padding:12px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.cbtn:hover{border-color:var(--err);color:var(--err);}
+
+/* Reset section */
+.danger-zone{background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.2);border-radius:14px;padding:20px 24px;margin-top:32px;}
+.dz-title{font-size:12px;font-weight:700;color:var(--err);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+.dz-btn{background:transparent;border:1px solid rgba(248,113,113,.3);color:var(--err);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin-right:8px;}
+.dz-btn:hover{background:rgba(248,113,113,.1);}
+
+/* Toast */
+.toast{position:fixed;bottom:80px;right:20px;background:var(--s);border:1px solid var(--bd);border-radius:12px;padding:12px 18px;font-size:13px;font-weight:500;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-color:rgba(74,222,128,.4);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="lgn">
+  <div class="lbox">
+    <span class="logo">LAW</span>
+    <span class="lsub">Панель администратора</span>
+    <span class="pinlbl">Введите пароль</span>
+    <input type="password" class="pin-inp" id="pinInp" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <span class="lerr" id="lerr"></span>
+    <div class="lbtn" onclick="doLogin()">Войти</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="hlogo">LAW</span>
+      <span class="hbadge">Администратор</span>
+    </div>
+    <div class="hout" onclick="doLogout()">Выйти</div>
+  </div>
+
+  <div class="main">
+    <div style="margin-bottom:24px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:6px">Управление участниками</div>
+      <div style="font-size:13px;color:var(--mt)">Редактируй списки, добавляй и удаляй участников. Изменения сохраняются в Firebase и сразу видны судьям.</div>
+    </div>
+
+    <div class="nom-tabs" id="nomTabs"></div>
+    <div id="nomContent"></div>
+
+    <div class="danger-zone">
+      <div class="dz-title">Опасная зона</div>
+      <div style="font-size:13px;color:var(--mt);margin-bottom:14px">Эти действия нельзя отменить</div>
+      <div class="dz-btn" onclick="clearScores()">Удалить все оценки</div>
+      <div class="dz-btn" onclick="clearAll()">Удалить всё</div>
+    </div>
+  </div>
+
+  <div class="save-bar" id="saveBar" style="display:none">
+    <span class="save-info">Есть <b id="changeCount">0</b> несохранённых изменений</span>
+    <div style="display:flex;gap:8px">
+      <div class="cbtn" onclick="discardChanges()">Отменить</div>
+      <div class="sbtn" id="saveBtn" onclick="saveChanges()">Сохранить</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="ti"></span><span id="tm"></span></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyA1xkiAfHRKVCQDCmatrWLolEphtgwXOd0",
+  authDomain:"kulakovalaw.firebaseapp.com",
+  databaseURL:"https://kulakovalaw-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"kulakovalaw",
+  storageBucket:"kulakovalaw.firebasestorage.app",
+  messagingSenderId:"569728367844",
+  appId:"1:569728367844:web:6c888f00d010b5fde2c0f1"
+});
+const db=firebase.database();
+
+// Слушаем изменения teams из Firebase
+db.ref('teams').on('value', snap=>{
+  const fbTeams=snap.val()||{};
+  // Обновляем локальные списки
+  NOMS.forEach(nom=>{
+    if(fbTeams[nom.id]){
+      const arr=Object.values(fbTeams[nom.id]);
+      nom.teams=[...arr];
+    }
+  });
+  if(document.getElementById('app').classList.contains('vis')) renderNom();
+});
+</script>
+
+<script>
+const ADMIN_PASS='law2026';
+
+const NOMS=[
+  {id:'solo_beg',  name:'Solo Beginners', teams:['Портнова Анна','Меньших Дарья','Кораблина Стефания','Гончарова Дарья','Гаспарян Анжела','Давыдова Эвелина','Бутко Мария','Улыбина Татьяна','Бернадская Анна','Терещенко София','Еремеева Маргарита','Кузóра Карина','Наимова Виктория','Шахова София','Грабежева Жанна','Бойкова Юлия','Колесникова Ева','Павлова Маргарита','Ажнина Светлана','Лаптева Варвара','Окутина Мария','Гайфутдинова Валерия','Зотова Валерия','Григорьева Алиса','Мельникова Кристина','Бондарева Дарья','Мартынова Кристина','Лавриненко Екатерина','Афанасьева Екатерина','Нафикова Алина','Дмитриева Ирина','Маркитан Анастасия','Ким Александра','Казеннова Юлия','Бондарь Анна','Кугаевская Елизавета','Никулина Анна','Бильсон Анастасия','Пинчук Валерия','Дёмена Анастасия','Картошкина Мария','Борисова София','Шведова Ангелина','Шилкина Ксения','Борисова Дана','Евсеева Анастасия']},
+  {id:'duet',      name:'Duet',           teams:['@Dasha_dancelove','Две здесь','ВОСВОЯСИ','SOAK','Duetto','ПО ИНТЕРЕСАМ','@vkravtsova1','Flame Twix','@mrg_pavlova','POLIKRI','дуэт Х.О']},
+  {id:'solo_frame',name:'Solo Frame Up',  teams:['Лебедева Анастасия','Мирошникова Юлия','Cherrnuha','Пашкова Алиса','Цвиркун Дарья','Кукава Эльвира','Новикова Полина','Климова Валерия','Литвякова Анна','Лихачёва Александра','Захарова Наталья','Дубовицкая Софья','Еремеева Ирина','Лященко Валерия','Алина Gloom','Илана Исакова','Некрасова Марина','Костина Юлия','Котюх Александра','Цимбалюк Полина','Корниенко Анастасия','Рыжонкова Любовь']},
+  {id:'solo_pro',  name:'Solo Pro',       teams:['Мельникова Дарья','Ситора','Ловякина Елизавета','Клок Маргарита','Красова Дарья','Яковлева Алина','Полякова Александра','Соколикова Александра','Осетрова Татьяна','Абрамова Александра','Фатеева Анастасия','Корсикова Анастасия','Парыгина Алёна','Чистякова Ксения','Зуб Евгения','Баранова Елизавета','Приставка Екатерина','Милая Анастасия','Клёнова Полина','Сухова София','Демко Юлия','Мощенко Александра','Астанина Ева','Зарубкина Дарья','Глебова Юлия','Лотник Ксения','Молочко Татьяна','Болотникова Юлия','Син Инна','Трубникова Кристина','Корчагина Люсьена','Перчак Диана','Ахмякова Анастасия','Удельнов Василий','Казакова Алина','Кислюк Александра','Прибылова Елизавета','Тимирбаева Диана','Несмиянова Юля','Анищик Лада','Падей Екатерина','Пылаева Алена','Черных Анастасия','Самсонова Виктория','Шитикова Виктория','Сульковская Ирина','Мацак Кристина','Быстрова Арина','Зыбина Елизавета','Керова Ксения','Сидякина Анна','Корниенко Анастасия','Морозова Дарья','Букина Арина','Киселёва Мария','Смирнова Екатерина','Цыганкова Аня']},
+  {id:'mini_crew', name:'Mini Crew',      teams:['Nornir','Цукерочки','AVA','Bullet','LAVDO','Каблучный сбор','MAIDENS','dolls','DONNA','@vkravtsova1','LYNX','Dich Art Group','ViVibes','VI','NG','KITCH']},
+];
+
+let curNom=0;
+let editedTeams={}; // {nomId: [...teams]}
+let hasChanges=false;
+
+// ── LOGIN ──
+function doLogin(){
+  const p=document.getElementById('pinInp').value;
+  if(p===ADMIN_PASS){
+    document.getElementById('lgn').classList.add('hidden');
+    document.getElementById('app').classList.add('vis');
+    renderTabs();renderNom();
+  } else {
+    document.getElementById('lerr').textContent='Неверный пароль';
+    document.getElementById('pinInp').value='';
+  }
+}
+function doLogout(){
+  document.getElementById('lgn').classList.remove('hidden');
+  document.getElementById('app').classList.remove('vis');
+  document.getElementById('pinInp').value='';
+}
+
+// ── TABS ──
+function renderTabs(){
+  const t=document.getElementById('nomTabs'); t.innerHTML='';
+  NOMS.forEach((nom,i)=>{
+    const btn=document.createElement('div');
+    btn.className='ntab'+(i===curNom?' act':'');
+    btn.textContent=`${nom.name} (${getCurrentTeams(nom.id).length})`;
+    btn.onclick=()=>{curNom=i;renderTabs();renderNom();};
+    t.appendChild(btn);
+  });
+}
+
+function getCurrentTeams(nomId){
+  return editedTeams[nomId] || NOMS.find(n=>n.id===nomId).teams;
+}
+
+// ── NOM CONTENT ──
+function renderNom(){
+  const nom=NOMS[curNom];
+  const teams=getCurrentTeams(nom.id);
+  const ct=document.getElementById('nomContent');
+
+  let html=`
+    <div class="sec-hdr">
+      <span class="sec-title">${nom.name}</span>
+      <span class="sec-cnt">${teams.length} участников</span>
+    </div>
+    <div class="plist" id="plist">`;
+
+  teams.forEach((name,i)=>{
+    html+=`<div class="prow" id="prow_${i}">
+      <span class="pnum">${String(i+1).padStart(2,'0')}</span>
+      <input class="pname-inp" value="${name.replace(/"/g,'&quot;')}" 
+        onchange="editName(${i},this.value)" 
+        placeholder="Имя участника">
+      <div class="pdel" onclick="delParticipant(${i})" title="Удалить">✕</div>
+    </div>`;
+  });
+
+  html+=`</div>
+    <div class="add-btn" onclick="addParticipant()">+ Добавить участника</div>`;
+
+  ct.innerHTML=html;
+}
+
+function editName(idx,val){
+  const nom=NOMS[curNom];
+  if(!editedTeams[nom.id]) editedTeams[nom.id]=[...nom.teams];
+  editedTeams[nom.id][idx]=val.trim();
+  markChanged();
+}
+
+function delParticipant(idx){
+  const nom=NOMS[curNom];
+  if(!editedTeams[nom.id]) editedTeams[nom.id]=[...nom.teams];
+  if(!confirm(`Удалить "${editedTeams[nom.id][idx]}"?`)) return;
+  editedTeams[nom.id].splice(idx,1);
+  markChanged();
+  renderTabs(); renderNom();
+}
+
+function addParticipant(){
+  const name=prompt('Имя нового участника:');
+  if(!name||!name.trim()) return;
+  const nom=NOMS[curNom];
+  if(!editedTeams[nom.id]) editedTeams[nom.id]=[...nom.teams];
+  editedTeams[nom.id].push(name.trim());
+  markChanged();
+  renderTabs(); renderNom();
+  // Scroll to bottom
+  setTimeout(()=>document.getElementById('nomContent').scrollIntoView({block:'end'}),100);
+}
+
+function markChanged(){
+  hasChanges=true;
+  const count=Object.values(editedTeams).reduce((a,t)=>a+t.length,0);
+  document.getElementById('saveBar').style.display='flex';
+  document.getElementById('changeCount').textContent=Object.keys(editedTeams).length+' номинаций';
+}
+
+function discardChanges(){
+  editedTeams={};
+  hasChanges=false;
+  document.getElementById('saveBar').style.display='none';
+  renderTabs(); renderNom();
+}
+
+function saveChanges(){
+  const btn=document.getElementById('saveBtn');
+  btn.textContent='Сохранение...';
+
+  const updates={};
+  Object.entries(editedTeams).forEach(([nomId,teams])=>{
+    updates[nomId]=teams;
+    // Update local NOMS
+    const nom=NOMS.find(n=>n.id===nomId);
+    if(nom) nom.teams=[...teams];
+  });
+
+  db.ref('teams').update(updates).then(()=>{
+    btn.textContent='✓ Сохранено';
+    btn.className='sbtn saved';
+    editedTeams={};
+    hasChanges=false;
+    toast('✅','Изменения сохранены в Firebase');
+    setTimeout(()=>{
+      document.getElementById('saveBar').style.display='none';
+      btn.textContent='Сохранить';
+      btn.className='sbtn';
+      renderTabs();
+    },1500);
+  }).catch(e=>{
+    toast('❌','Ошибка сохранения: '+e.message);
+    btn.textContent='Сохранить';
+  });
+}
+
+// ── DANGER ZONE ──
+function clearScores(){
+  const p=prompt('Пароль для подтверждения:');
+  if(p!==ADMIN_PASS){toast('❌','Неверный пароль');return;}
+  if(!confirm('Удалить ВСЕ оценки судей? Списки участников останутся.')) return;
+  db.ref('scores').set(null);
+  db.ref('submitted').set(null);
+  db.ref('published').set(null);
+  toast('🗑','Все оценки удалены');
+}
+
+function clearAll(){
+  const p=prompt('Пароль для подтверждения:');
+  if(p!==ADMIN_PASS){toast('❌','Неверный пароль');return;}
+  if(!confirm('Удалить ВСЁ включая списки участников?')) return;
+  db.ref('/').set(null);
+  toast('🗑','База данных очищена');
+}
+
+// ── TOAST ──
+function toast(ico,msg){
+  const t=document.getElementById('toast');
+  t.className='toast ok';
+  document.getElementById('ti').textContent=ico;
+  document.getElementById('tm').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
