@@ -52,9 +52,13 @@ body{background:#0a0a0f;color:#f0f0f5;font-family:'Manrope',sans-serif;min-heigh
 
 /* Participant list */
 .plist{background:var(--s);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:16px;}
-.prow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bd);transition:background .15s;}
+.prow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bd);transition:background .15s, opacity .2s;}
 .prow:last-child{border-bottom:none;}
 .prow:hover{background:rgba(255,255,255,.02);}
+.prow.dragging{opacity:.4;background:rgba(224,53,53,.05);}
+.prow.drag-over{background:rgba(224,53,53,.08);border-top:2px solid var(--a);}
+.drag-handle{cursor:grab;color:var(--mt);font-size:18px;flex-shrink:0;padding:2px 4px;user-select:none;line-height:1;}
+.drag-handle:active{cursor:grabbing;}
 .pnum{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--bd);min-width:30px;}
 .pname-inp{flex:1;background:transparent;border:none;border-bottom:1px solid transparent;color:#f0f0f5;font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;outline:none;padding:4px 0;transition:border-color .2s;}
 .pname-inp:focus{border-bottom-color:var(--a);}
@@ -231,7 +235,12 @@ function renderNom(){
     <div class="plist" id="plist">`;
 
   teams.forEach((name,i)=>{
-    html+=`<div class="prow" id="prow_${i}">
+    html+=`<div class="prow" id="prow_${i}" draggable="true"
+      ondragstart="dragStart(event,${i})"
+      ondragover="dragOver(event,${i})"
+      ondrop="dragDrop(event,${i})"
+      ondragend="dragEnd()">
+      <span class="drag-handle" title="Перетащи чтобы изменить порядок">&#8942;&#8942;</span>
       <span class="pnum">${String(i+1).padStart(2,'0')}</span>
       <input class="pname-inp" value="${name.replace(/"/g,'&quot;')}" 
         onchange="editName(${i},this.value)" 
@@ -246,6 +255,40 @@ function renderNom(){
   ct.innerHTML=html;
 }
 
+// ── DRAG & DROP ──
+let dragIdx=null;
+
+function dragStart(e,idx){
+  dragIdx=idx;
+  e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>document.getElementById('prow_'+idx)?.classList.add('dragging'),0);
+}
+function dragOver(e,idx){
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('.prow').forEach(r=>r.classList.remove('drag-over'));
+  if(idx!==dragIdx) document.getElementById('prow_'+idx)?.classList.add('drag-over');
+}
+function dragDrop(e,dropIdx){
+  e.preventDefault();
+  if(dragIdx===null||dragIdx===dropIdx)return;
+  const nom=NOMS[curNom];
+  if(!editedTeams[nom.id]) editedTeams[nom.id]=[...nom.teams];
+  const arr=editedTeams[nom.id];
+  const moved=arr.splice(dragIdx,1)[0];
+  arr.splice(dropIdx,0,moved);
+  markChanged();
+  renderTabs(); renderNom();
+  dragIdx=null;
+}
+function dragEnd(){
+  document.querySelectorAll('.prow').forEach(r=>{
+    r.classList.remove('dragging','drag-over');
+  });
+  dragIdx=null;
+}
+
+// ── EDIT / DELETE / ADD ──
 function editName(idx,val){
   const nom=NOMS[curNom];
   if(!editedTeams[nom.id]) editedTeams[nom.id]=[...nom.teams];
