@@ -303,6 +303,7 @@
     <span class="logo-sub">Dance Competition · Results</span>
     <div class="hright">
       <div class="live"><div class="ldot"></div>LIVE</div>
+      <span id="upd" style="font-size:10px!important;color:var(--mt)!important;"></span>
       <div class="fsbtn" onclick="toggleFS()">&#x26F6; Fullscreen</div>
     </div>
   </div>
@@ -401,16 +402,21 @@ function compute(nomIdx){
   const nom=C.noms[nomIdx];
   const sc=window._sc||{}, sub=window._sub||{};
   const bj=C.judges.map((j,ji)=>({...j,ji})).filter(j=>j.block===nom.block);
-  const jDone=bj.map(j=>sub?.[j.ji]?.[nom.id]===true);
+  // Судья считается "сдавшим" если: нажал Submit ИЛИ есть хотя бы одна сохранённая оценка
+  const jDone=bj.map(j=>{
+    if(sub?.[j.ji]?.[nom.id]===true) return true;
+    const nomData=sc?.[j.ji]?.[nom.id];
+    if(!nomData) return false;
+    return Object.values(nomData).some(s=>s&&s.saved===true);
+  });
   const crit=getCrit(nom);
   const teams=nom.teams.map((team,ti)=>{
     const jScores=[];
     bj.forEach((j,bi)=>{
       if(!jDone[bi])return;
-      // Firebase keys are strings — try both string and number
       const nomData=sc?.[j.ji]?.[nom.id];
       const s=nomData?.[ti] ?? nomData?.[String(ti)];
-      if(s)jScores.push({w:wt(s,nom),raw:s});
+      if(s && !s.absent) jScores.push({w:wt(s,nom),raw:s});
     });
     const avg=jScores.length?jScores.reduce((a,b)=>a+b.w,0)/jScores.length:null;
     const critAvg={};
@@ -425,9 +431,18 @@ function compute(nomIdx){
         judge:j.name,
         text:s?.comment||'',
         done:jDone[bi],
+        absent:s?.absent===true,
       };
     });
-    return{team,ti,avg,critAvg,cmts};
+    // Если участник отсутствует у всех судей — помечаем
+    const allAbsent=bj.length>0 && jDone.some(Boolean) && jScores.length===0 &&
+      bj.some((j,bi)=>{
+        if(!jDone[bi])return false;
+        const nd=sc?.[j.ji]?.[nom.id];
+        const s=nd?.[ti]??nd?.[String(ti)];
+        return s?.absent===true;
+      });
+    return{team,ti,avg,critAvg,cmts,absent:allAbsent};
   });
   const sorted=[...teams].filter(t=>t.avg!==null).sort((a,b)=>b.avg-a.avg);
   const unsorted=teams.filter(t=>t.avg===null);
@@ -474,13 +489,27 @@ function renderAll(){
   pb.textContent=isPublished?'🔄 Переопубликовать':'Опубликовать результаты';
   pb.className='pbtn'; pb.onclick=publish;
 
+  // Время обновления
+  document.getElementById('upd').textContent='обновлено '+new Date().toLocaleTimeString('ru');
+
   const ct=document.getElementById('content');
+
   if(!isPublished){
     ct.innerHTML=`<div class="pend">
       <div class="pend-ico">&#9201;</div>
       <span class="pend-t">Ожидаем публикации</span>
       <span class="pend-s">Нажмите «Опубликовать результаты» в панели &#9881;<br>
       Сдали оценки: ${jDone.filter(Boolean).length} из ${bj.length}</span>
+    </div>`;
+    return;
+  }
+
+  // Если нет никаких оценок — показываем ожидание
+  if(sorted.length===0){
+    ct.innerHTML=`<div class="pend">
+      <div class="pend-ico">&#9201;</div>
+      <span class="pend-t">Ожидаем оценки судей</span>
+      <span class="pend-s">Сдали оценки: ${jDone.filter(Boolean).length} из ${bj.length}</span>
     </div>`;
     return;
   }
@@ -701,7 +730,6 @@ function showW(name,score){
 function closeW(){document.getElementById('wov').classList.remove('vis');}
 
 renderAll();
-setInterval(renderAll,15000);
 </script>
 </body>
 </html>
