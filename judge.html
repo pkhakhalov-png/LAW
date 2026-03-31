@@ -136,6 +136,7 @@
           border-radius:14px!important;margin-bottom:10px!important;overflow:hidden!important;
           transition:border-color .2s!important;}
 #L .card.sc{border-color:rgba(74,222,128,.35)!important;}
+#L .card.absent{border-color:rgba(248,113,113,.3)!important;opacity:.75!important;}
 #L .chead{display:flex!important;align-items:center!important;padding:14px 16px!important;
            cursor:pointer!important;gap:10px!important;user-select:none!important;}
 #L .chead:hover{background:rgba(255,255,255,.02)!important;}
@@ -416,12 +417,49 @@ function sv(){
 }
 function gs(j,nid,t){
   const nd=sc?.[j]?.[nid];
-  return (nd?.[t] ?? nd?.[String(t)]) || {technique:5,musicality:5,choreo:5,appearance:5,comment:'',saved:false};
+  return (nd?.[t] ?? nd?.[String(t)]) || {technique:1,musicality:1,choreo:1,appearance:1,comment:'',saved:false,absent:false};
 }
-function ss(j,nid,t,f,v){if(!sc[j])sc[j]={};if(!sc[j][nid])sc[j][nid]={};if(!sc[j][nid][t])sc[j][nid][t]={technique:5,musicality:5,choreo:5,appearance:5,comment:'',saved:false};sc[j][nid][t][f]=v;sc[j][nid][t].saved=false;sv();}
+function ss(j,nid,t,f,v){
+  if(!sc[j])sc[j]={};
+  if(!sc[j][nid])sc[j][nid]={};
+  if(!sc[j][nid][t])sc[j][nid][t]={technique:1,musicality:1,choreo:1,appearance:1,comment:'',saved:false,absent:false};
+  sc[j][nid][t][f]=v;
+  sc[j][nid][t].saved=false;
+  sv();
+}
 function getCrit(nomIdx){const nom=C.noms[nomIdx];return nom.critType==='crew'?C.critCrew:C.critSolo;}
 function wt(s,nomIdx){return getCrit(nomIdx).reduce((a,c)=>a+(parseFloat(s[c.k])||0)*c.w,0);}
-function cc(v){v=parseFloat(v);return v>=8?'hi':v>=6?'md':'lo';}
+function cc(v){v=parseFloat(v);return v>=8?'hi':v>=5?'md':'lo';}
+
+function toggleAbsent(tIdx){
+  const nom=C.noms[ni];
+  if(!sc[ji])sc[ji]={};
+  if(!sc[ji][nom.id])sc[ji][nom.id]={};
+  if(!sc[ji][nom.id][tIdx])sc[ji][nom.id][tIdx]={technique:1,musicality:1,choreo:1,appearance:1,comment:'',saved:false,absent:false};
+  sc[ji][nom.id][tIdx].absent = !sc[ji][nom.id][tIdx].absent;
+  if(sc[ji][nom.id][tIdx].absent){
+    sc[ji][nom.id][tIdx].saved=true; // absent = auto-saved
+  }
+  sv();
+  rNom();
+  toast('👤', sc[ji][nom.id][tIdx].absent ? 'Отмечен как отсутствующий' : 'Отметка снята');
+}
+
+function addParticipant(nom){
+  const name=prompt('Имя нового участника:');
+  if(!name||!name.trim())return;
+  // Save to Firebase teams list
+  const nomId=nom.id;
+  const existing=nom.teams.slice();
+  existing.push(name.trim());
+  // Update in Firebase
+  if(!sc['teams'])sc['teams']={};
+  sc['teams'][nomId]=existing;
+  sv();
+  nom.teams=existing; // update local
+  rNom();
+  toast('✅',`"${name.trim()}" добавлен`);
+}
 
 // ══ ЛОГИН ══
 function selJ(i){
@@ -486,9 +524,17 @@ function rNom(){
   if(dn)return;
 
   const el=document.getElementById('teams');
-  el.innerHTML=`<div class="nhdr"><span class="ntitle">${nom.name}</span><span class="ncnt">${nom.teams.length} участников</span></div>`;
+  el.innerHTML=`
+    <div class="nhdr">
+      <span class="ntitle">${nom.name}</span>
+      <span class="ncnt" id="ncnt_${ni}">${nom.teams.length} участников</span>
+    </div>`;
 
-  nom.teams.forEach((team,tIdx)=>{
+  // Динамический список из Firebase (если есть) или из CONFIG
+  const fbTeams = (sc?.['teams']?.[nom.id]) ? Object.values(sc['teams'][nom.id]) : null;
+  const teamList = fbTeams || nom.teams;
+
+  teamList.forEach((team,tIdx)=>{
     const s=gs(ji,nom.id,tIdx);
     const crit=getCrit(ni);
     const w=wt(s,ni);
@@ -496,35 +542,48 @@ function rNom(){
     const formula=isCrew
       ?'20% техника + 25% муз.+синхрон + 35% хореог.+рисунки + 20% внеш.вид'
       :'35% техника + 25% музыкальность + 35% хореография + 5% внешний вид';
+    const isAbsent=s.absent===true;
     const card=document.createElement('div');
-    card.className='card'+(s.saved?' sc':'');
+    card.className='card'+(s.saved?' sc':'')+(isAbsent?' absent':'');
     card.id='c'+tIdx;
 
     card.innerHTML=`
       <div class="chead" onclick="tog(${tIdx})">
         <span class="cnum">${String(tIdx+1).padStart(2,'0')}</span>
-        <div class="cnm"><span class="cnm-m">${team}</span><span class="tap">нажми для оценки</span></div>
-        <span class="cprev${s.saved?' h':''}">${s.saved?w.toFixed(2):'—'}</span>
+        <div class="cnm">
+          <span class="cnm-m">${team}${isAbsent?' <span style="color:var(--err);font-size:11px;font-weight:400">· не выступал</span>':''}</span>
+          <span class="tap">${isAbsent?'отмечен как отсутствующий':'нажми для оценки'}</span>
+        </div>
+        <span class="cprev${s.saved&&!isAbsent?' h':''}">${isAbsent?'—':s.saved?w.toFixed(2):'—'}</span>
         <span class="chev">▾</span>
       </div>
       <div class="cbody">
+        ${isAbsent?`
+          <div style="padding:16px 0;text-align:center">
+            <div style="color:var(--err);font-size:13px;margin-bottom:12px">Участник отмечен как отсутствующий</div>
+            <div class="savbtn" onclick="toggleAbsent(${tIdx})" style="background:var(--s2)!important;border:1px solid var(--brd)!important;color:var(--txt)!important;margin:0 auto!important">Отменить</div>
+          </div>
+        `:`
+        <div style="display:flex;justify-content:flex-end;padding:10px 0 0">
+          <div onclick="toggleAbsent(${tIdx})" style="font-size:11px;color:var(--mut);border:1px solid var(--brd);border-radius:8px;padding:4px 12px;cursor:pointer">Не выступал</div>
+        </div>
         <div class="cgrid">
           ${crit.map(c=>`
             <div class="crit">
               <div class="crith"><span class="critn">${c.l}</span><span class="critw">${Math.round(c.w*100)}%</span></div>
               <div class="sctrl">
-                <div class="stp" onclick="stp(${tIdx},'${c.k}',-0.5)">−</div>
+                <div class="stp" onclick="stp(${tIdx},'${c.k}',-0.1)">−</div>
                 <div class="nwrap">
                   <input type="number" class="ninp ${cc(s[c.k])}" id="ni_${tIdx}_${c.k}"
-                    min="0" max="10" step="0.5" value="${parseFloat(s[c.k]||5).toFixed(1)}"
+                    min="1" max="10" step="0.1" value="${parseFloat(s[c.k]||1).toFixed(1)}"
                     oninput="oi(${tIdx},'${c.k}',this.value)"
                     onblur="ob(${tIdx},'${c.k}',this.value)">
                   <span class="nmx">/10</span>
                 </div>
-                <div class="stp" onclick="stp(${tIdx},'${c.k}',+0.5)">+</div>
+                <div class="stp" onclick="stp(${tIdx},'${c.k}',+0.1)">+</div>
               </div>
               <div class="qrow">
-                ${[5,6,7,7.5,8,8.5,9,9.5,10].map(v=>`<div class="qb" onclick="qs(${tIdx},'${c.k}',${v})">${v}</div>`).join('')}
+                ${[1,2,3,4,5,6,7,8,9,10].map(v=>`<div class="qb" onclick="qs(${tIdx},'${c.k}',${v})">${v}</div>`).join('')}
               </div>
             </div>`).join('')}
         </div>
@@ -537,12 +596,21 @@ function rNom(){
           oninput="ss(ji,'${nom.id}',${tIdx},'comment',this.value)">${s.comment}</textarea>
         <div class="savbtn${s.saved?' sv':''}" id="sb${tIdx}" onclick="savT(${tIdx})">
           ${s.saved?'✓ Сохранено':'💾 Сохранить'}
-        </div>
+        </div>`}
       </div>`;
 
     el.appendChild(card);
     if(tIdx===0)card.classList.add('open');
   });
+
+  // Кнопка добавить участника
+  const addBtn=document.createElement('div');
+  addBtn.style.cssText='display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border:1px dashed var(--bd);border-radius:14px;cursor:pointer;color:var(--mt);font-size:13px;font-weight:600;margin-top:6px;transition:all .2s';
+  addBtn.innerHTML='+ Добавить участника';
+  addBtn.onmouseenter=()=>addBtn.style.borderColor='var(--a)';
+  addBtn.onmouseleave=()=>addBtn.style.borderColor='var(--bd)';
+  addBtn.onclick=()=>addParticipant(nom);
+  el.appendChild(addBtn);
   rSub(nom);
 }
 
@@ -566,8 +634,8 @@ function tog(t){document.getElementById('c'+t).classList.toggle('open');}
 
 function stp(t,k,d){
   const inp=document.getElementById('ni_'+t+'_'+k);
-  let v=parseFloat(inp.value)||5;
-  v=Math.min(10,Math.max(0,Math.round((v+d)*2)/2));
+  let v=parseFloat(inp.value)||1;
+  v=Math.min(10,Math.max(1,Math.round((v+d)*10)/10));
   inp.value=v.toFixed(1);oi(t,k,v);
 }
 function oi(t,k,raw){
@@ -582,8 +650,8 @@ function oi(t,k,raw){
   document.getElementById('c'+t).classList.remove('sc');
 }
 function ob(t,k,raw){
-  let v=parseFloat(raw);if(isNaN(v))v=5;
-  v=Math.round(Math.min(10,Math.max(0,v))*2)/2;
+  let v=parseFloat(raw);if(isNaN(v))v=1;
+  v=Math.round(Math.min(10,Math.max(1,v))*10)/10;
   const inp=document.getElementById('ni_'+t+'_'+k);
   if(inp)inp.value=v.toFixed(1);oi(t,k,v);
 }
